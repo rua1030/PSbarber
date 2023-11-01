@@ -106,12 +106,25 @@ async function listarUsuario(req, res) {
 }
 
 
+async function login(req, res){
+  const datosUsuarios = req.body;
+
+  const user = await Usuario.findOne({ where: { email:datosUsuarios.email, pass:datosUsuarios.pass } });
+
+  if (user) {
+    res.json({ message: 'Login exitoso' });
+  } else {
+    res.status(401).json({ message: 'Credenciales incorrectas' });
+  }
+}
+
+
 
 module.exports={
     listarUsuario,
     crearUsuario,
     actualizarUsuario,
     actualizarEstado,
-
+    login
 }
     

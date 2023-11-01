@@ -1,11 +1,11 @@
 const express=require("express")
-const resApi=require("./router/index")
+const responsiveApi=require("./router/index")
 const cors =require('cors')
 const app=express()
 
 app.use(express.json());
 app.use(cors())
-resApi(app)
+responsiveApi(app)
 app.listen(3001, ()=>{
-    console.log("Server in line")
+console.log("Server in line port 3001")
 })
