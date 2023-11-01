@@ -1,8 +1,8 @@
-const {DataTypes, Model}=require("sequelize")
-const sequelize=require('../../database/database')
+const {DataTypes, Model}=require("sequelize");
+const sequelize=require('../../database/database');
 
-
-       const Cliente=sequelize.define('cliente',{
+       // Modelo del cliente donde utilizamos una constante que va a definir los valores de la tabla
+       const Cliente=sequelize.define('clientes',{
                 id_Cliente:{
                 type:DataTypes.INTEGER,
                 primaryKey:true,

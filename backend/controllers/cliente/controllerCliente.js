@@ -41,7 +41,8 @@ async function actualizarCliente(req, res){
       documento,
       email,
       estado } = req.body;
-  
+
+      // Validación de que ese cliente si exista
     try {
       const cliente = await Cliente.findByPk(id);
       if (!cliente) {
