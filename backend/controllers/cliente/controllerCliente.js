@@ -1,0 +1,70 @@
+const Cliente = require('../../models/cliente/modelCliente');
+
+// Funcion para traer el listado de la tabla clientes
+async function listarCliente(req, res){
+
+    try {
+        const cliente = await Cliente.findAll();
+        res.json(cliente);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener clientes' });
+      }
+    }
+
+    //Función para crear un nuevo cliente en la tabla clientes
+ async function crearCliente(req, res){
+  const dataCliente=req.body;
+  try {
+    const cliente = await Cliente.create({
+      id_Cliente:dataCliente.id_Cliente,
+      nombre:dataCliente.nombre,
+      telefono:dataCliente.telefono,
+      documento:dataCliente.documento,
+      email:dataCliente.email,
+      estado: 1
+    });
+    res.status(201).json(cliente)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear cliente' });
+  }
+ }
+
+ //Función para actualizar un cliente, primero llamamos los datos del cliente especifico mediante el id y despues los actualizamos
+ async function actualizarCliente(req, res){
+    const { id } = req.params;
+    const { 
+      id_Cliente,
+      nombre,
+      telefono,
+      documento,
+      email,
+      estado } = req.body;
+  
+    try {
+      const cliente = await Cliente.findByPk(id);
+      if (!cliente) {
+        return res.status(404).send('Cliente no encontrado');
+      }
+  
+      cliente.id_Cliente = id_Cliente;
+      cliente.nombre = nombre;
+      cliente.telefono=telefono;
+      cliente.documento=documento;
+      cliente.email=email;
+      cliente.estado=estado;
+  
+      await cliente.save();
+  
+      return res.status(200).json(cliente);
+    } catch (error) {
+      return res.status(500).send('Error al actualizar el cliente');
+    }
+   }
+
+module.exports={
+    listarCliente,
+    crearCliente,
+    actualizarCliente
+}
