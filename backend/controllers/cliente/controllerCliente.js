@@ -13,7 +13,7 @@ async function listarCliente(req, res){
     }
 
     //Función para crear un nuevo cliente en la tabla clientes
- async function crearCliente(req, res){
+async function crearCliente(req, res){
   const dataCliente=req.body;
   try {
     const cliente = await Cliente.create({
@@ -32,7 +32,7 @@ async function listarCliente(req, res){
  }
 
  //Función para actualizar un cliente, primero llamamos los datos del cliente especifico mediante el id y despues los actualizamos
- async function actualizarCliente(req, res){
+async function actualizarCliente(req, res){
     const { id } = req.params;
     const { 
       id_Cliente,
@@ -63,8 +63,32 @@ async function listarCliente(req, res){
     }
    }
 
+   // Función para eliminar un cliente mediante el parametro del id 
+async function eliminarCliente(req,res){
+  try {
+    const id = req.params.id;
+
+    // Validación de que ese cliente si exista
+    const cliente = await Cliente.findByPk(id);
+
+    if (!cliente) {
+        return res.status(404).json({ error: 'Cliente no encontrado' });
+    }
+
+    await cliente.destroy();
+
+    res.json({ message: 'Cliente eliminado' });
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar cliente' });
+}
+
+}
+
+
 module.exports={
     listarCliente,
     crearCliente,
-    actualizarCliente
+    actualizarCliente,
+    eliminarCliente
 }
