@@ -8,7 +8,9 @@ const sequelize=require('../../database/database');
                 primaryKey:true,
                 },
               nombre:DataTypes.STRING,
+              apellidos:DataTypes.STRING,
               telefono:DataTypes.STRING,
+              tipo_documento:DataTypes.STRING,
               documento:DataTypes.STRING,
               email:DataTypes.STRING,
               estado:DataTypes.BOOLEAN

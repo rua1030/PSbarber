@@ -19,7 +19,9 @@ async function crearCliente(req, res){
     const cliente = await Cliente.create({
       id_Cliente:dataCliente.id_Cliente,
       nombre:dataCliente.nombre,
+      apellidos:dataCliente.apellidos,
       telefono:dataCliente.telefono,
+      tipo_documento:dataCliente.tipo_documento,
       documento:dataCliente.documento,
       email:dataCliente.email,
       estado: 1
@@ -37,7 +39,9 @@ async function actualizarCliente(req, res){
     const { 
       id_Cliente,
       nombre,
+      apellidos,
       telefono,
+      tipo_documento,
       documento,
       email,
       estado } = req.body;
@@ -51,7 +55,9 @@ async function actualizarCliente(req, res){
   
       cliente.id_Cliente = id_Cliente;
       cliente.nombre = nombre;
+      cliente.apellidos = apellidos;
       cliente.telefono=telefono;
+      cliente.tipo_documento= tipo_documento;
       cliente.documento=documento;
       cliente.email=email;
       cliente.estado=estado;

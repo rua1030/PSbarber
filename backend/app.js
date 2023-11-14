@@ -13,6 +13,6 @@ app.use(cors())
 responsiApi(app)
 
 //Servidor
-app.listen(4000, ()=>{
-    console.log('Servidor respondiendo por el puerto 4000')
+app.listen(3001, ()=>{
+    console.log('Servidor respondiendo por el puerto 3001')
 })
