@@ -10,4 +10,8 @@ export const getListarEmpleados = async ()=>{
     return await axios.get('http://localhost:3001/empleado')
 }
 
+export const postCrearClientes = async (task) => {
+    return await axios.post('http://localhost:3001/cliente/create', task) // route and controller
+}
+
 
