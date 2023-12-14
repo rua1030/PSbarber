@@ -1,11 +1,11 @@
-const Usuario=require("../router/usuario/routerUsuario")
+const Empleado=require("../router/empleado/routerEmpleado")
 const Rol=require("../router/rol/routerRol")
-const Barbero=require("../router/barbero/routerBarbero")
-
+const Tipo_Empleado=require("../router/Tipo_Empleado/routerTIpo_Empleado")
+const Cliente=require("../router/cliente/routerCliente")
 function responsiveApi(app){
-app.use("/usuario", Usuario)
+app.use("/empleado", Empleado)
 app.use("/rol", Rol)
-app.use("/barbero",Barbero)
+app.use("/Tipo_Empleado",Tipo_Empleado)
+app.use("/cliente",Cliente)
 }
-
 module.exports=responsiveApi;

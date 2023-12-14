@@ -3,7 +3,6 @@ const {Sequelize} = require("sequelize")
 const sequelize = new Sequelize("ps_barber", "root", "", {
     host:"localhost",
     dialect:"mysql"
-    
 })
 
 async function conexion(){

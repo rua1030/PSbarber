@@ -1,6 +1,5 @@
 const {DataTypes, Model}=require("sequelize")
 const sequelize=require("../../database/db")
-
 const Rol=sequelize.define('rols',{
     id_Rol:{
     type:DataTypes.INTEGER,
@@ -13,4 +12,5 @@ const Rol=sequelize.define('rols',{
   timestamps: false // Desactiva las columnas createdAt y updatedAt
 }
 )
+
 module.exports=Rol
