@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import axios from 'axios';
 
 export const getListarEmpleado = async ()=>{
@@ -40,17 +41,45 @@ export const postEmpleado = async (task) => {
   export const putActivarEmpleado = async (id_Empleado) => {
     return await axios.put(`http://localhost:3001/empleado/activate/${id_Empleado}`);
   }
+
   export const loginIngreso = async (email, contrasena) => {
-    // eslint-disable-next-line no-useless-catch
-    try{  
-      const response = await axios.post(' ',{
+    const response = await axios.post('http://localhost:3001/empleado/login/', {
       email: email,
       contrasena: contrasena,
     });
-    const { token, empleados } = response.data; 
-    return { token, empleados };
-    }catch(error){
-      throw error
+  
+    // Verifica si la respuesta incluye tanto el token como la información del Empeleado
+    if (response.data && response.data.token && response.data.user) {
+      const { token, user } = response.data;
+      return { token, user };
+    } else {
+      // Maneja el caso en el que la respuesta no incluye el token o la información del empleado esperada
+      throw new Error('La respuesta no incluye el token o la información del empleado.');
+    }
+  };
+  export const cambiarContrasena = async (email, contrasena) => {
+    try {
+      const response = await axios.post(`http://localhost:3001/Empleado/cambiarcontrasena/`, {
+        email: email,
+        contrasena: contrasena,
+      });
+      console.log('Contraseña cambiada exitosamente:', response.data);
+  
+      return response.data; // O algo similar
+  
+    } catch (error) {
+      throw error; // Maneja el error adecuadamente en tu componente React
+    }
+  };
+  
+  export const enviarContrasena = async (email) => {
+    try {
+      const response = await axios.post('http://localhost:3001/empleado/enviaremail/', {
+        email: email,
+        
+      });
+    } catch (error) {
+      throw error; // Maneja el error adecuadamente en tu componente React
     }
   };
 

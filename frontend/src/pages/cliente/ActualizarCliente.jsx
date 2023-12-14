@@ -2,7 +2,6 @@
     import '../../css/pages.css'
     import { Field } from 'formik';
     import { Form, Formik } from 'formik';
-    import { postCliente } from '../../api/rutasApiCliente';
     import TextField from '@mui/material/TextField';
     import CheckIcon from '@mui/icons-material/Check';
     import ErrorIcon from '@mui/icons-material/Error';
@@ -36,6 +35,7 @@
         validacionActualizar(clienteId)
         cargarDatosClientes(params.id_Cliente)
 
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       },[params.id_Cliente,clienteId])
 
       const handleCancel = () => {
@@ -158,8 +158,8 @@
                     }}
                     >
                     {({ handleChange, handleSubmit, values, errors, isValid }) => (
-                        <div className="modal-content" style={{ position: 'absolute', top: '0%', left: '0%', transform: 'translate(-50%, -50%)', width: '800px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px' }}>
-                            <h5 className="card-title">Agregar Cliente</h5>
+                        <div className="modal-content justify-content-center" style={{ position: 'absolute', top: '0%', left: '0%', transform: 'translate(-50%, -50%)', width: '800px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px',textAlign:'center' }}>
+                            <h5 className="card-title">Actualizar cliente</h5>
                             <Form onSubmit={handleSubmit} className="row g-3 needs-validation">
                                 <div className="col-md-6">
                                 <div className="mb-3 mt-3">

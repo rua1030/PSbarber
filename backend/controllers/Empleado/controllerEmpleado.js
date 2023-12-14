@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const Tipo_empleado = require("../../models/tipo_empleado/modelTipoEmpleado");
 const jwt = require('jsonwebtoken');
-
+const nodemailer = require('nodemailer');
 
 async function listarEmpleado(req, res) {
   try {
@@ -213,15 +213,16 @@ async function eliminarEmpleado(req, res) {
       res.status(500).json({ error: 'Error al eliminar empleado' });
   }
 }
+const secretKey = 'your-secret-key';
+
 
 async function login(req, res) {
-
   const {email, contrasena} = req.body;
 
   const empleado = await Empleado.findOne({ where: { email } });
 
   if (!empleado) {
-    return res.status(401).json({ error: 'Authentication failed empleado' });
+    return res.status(401).json({ error: 'Authentication failed user' });
   }
 
   const passwordMatch = await bcrypt.compare(contrasena, empleado.contrasena)
@@ -230,23 +231,83 @@ async function login(req, res) {
     return res.status(401).json({ error: 'Authentication failed' });
   }
   if (!empleado.estado) {
-    return res.status(401).json({ error: 'empleado is not authorized to login' });
+    return res.status(401).json({ error: 'User is not authorized to login' });
   }
   const rol = await Rol.findByPk(empleado.id_Rol);
 
-  const token = jwt.sign({ empleadoId: empleado.id_Empleado, email: empleado.email, nombre: empleado.nombres, rol: rol ? rol.nombre : 'Sin rol',  }, secretKey, { expiresIn: '1h' });
+  const token = jwt.sign({ userId: empleado.id_Empleado, email: empleado.email, nombre: empleado.nombres, rol: rol ? rol.nombre : 'Sin rol',  }, secretKey, { expiresIn: '1h' });
   res.cookie('token', token, { httpOnly: true });
 
   res.status(200).json({ 
     token,
-    Empleados: {
+    user: {
       id: empleado.id_Empleado,
       email: empleado.email,
       nombre: empleado.nombres,
-      rol: rol ? rol.nombre_rol : 'Sin rol',
+      apellido:empleado.apellidos,
+      rol: rol ? rol.nombre: 'Sin rol',
     },
    });
 }
+
+async function enviarEmail(req, res) {
+  try {
+    const { email } = req.body;
+
+    // Busca al usuario por su dirección de correo electrónico
+    const empleado = await Empleado.findOne({ where: { email } });
+
+    if (!empleado) {
+      return res.status(404).json({ error: 'empleado no encontrado' });
+    }
+    
+    const token = jwt.sign({ userId: empleado.id_Empleado }, 'tu_secreto', { expiresIn: '1h' });
+
+    // Envía un correo electrónico informando sobre el cambio de contraseña
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'juandavidruaisaza@gmail.com',
+        pass: '1001249557Rua'//cambiar esta parte del codio a un doenv
+      }
+    });
+
+    const mailOptions = {
+      from: 'juandavidruaisaza@gmail.com',
+      to: empleado.email,
+      subject: 'Recuperación de Contraseña - PS Barber',
+      html: `
+        <h1>¡Hola ${empleado.nombres} ${empleado.apellido}!</h1>
+        <p>Hemos recibido una solicitud para restablecer tu contraseña en PS Barber.</p>
+        <p>Si no has solicitado esto, puedes ignorar este correo electrónico; tu contraseña actual seguirá siendo válida.</p>
+        <p>Para cambiar tu contraseña, haz clic en el siguiente enlace:</p>
+        <a href="http://localhost:5173/cambiarcontrasena?token=${token}" target="_blank">Cambiar Contraseña</a>
+        <p>Este enlace expirará en 1 hora por razones de seguridad.</p>
+        <p>Si tienes algún problema con el enlace, copia y pega la siguiente URL en tu navegador:</p>
+        <p>http://localhost:5173/cambiarcontrasena?token=${token}</p>
+        <p>¡Gracias por confiar en PS Barber!</p>
+        <p>Saludos,</p>
+        <p>El equipo de PS Barber</p>
+      `
+    };
+    
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log('Correo electrónico enviado: ' + info.response);
+      }
+    });
+
+    res.status(200).json({ message: 'Contraseña cambiada exitosamente' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al cambiar la contraseña' });
+  }
+}
+
+
 
 module.exports = {
   listarEmpleado,
@@ -256,5 +317,6 @@ module.exports = {
   listarporid,
   eliminarEmpleado,
   desactivarEmpleado,
-  login
+  login,
+  enviarEmail
 };

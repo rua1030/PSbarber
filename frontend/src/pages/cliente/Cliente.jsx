@@ -24,6 +24,7 @@ function Cliente(){
 
   useEffect(() => {
     listaCliente();
+ // eslint-disable-next-line react-hooks/exhaustive-deps
  },[searchTerm]);
 
   // Abrir modal create 

@@ -9,5 +9,7 @@ Router.put("/disable/:id_Empleado", empleadoController.desactivarEmpleado)
 Router.put("/activate/:id_Empleado", empleadoController.activarEmpleado)
 Router.delete("/delete/:id_Empleado", empleadoController.eliminarEmpleado)
 Router.post("/login/", empleadoController.login)
+// Router.post("/cambiarcontrasena", empleadoController.enviarEmail)
+Router.post("/enviaremail/", empleadoController.enviarEmail)
 
 module.exports=Router;

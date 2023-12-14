@@ -5,12 +5,14 @@ import { ClienteContextProvider }from"./context/cliente/contexCliente"
 
 import Cliente from "./pages/cliente/Cliente"
 
+
 import Login from "./pages/empledo/login"
 import LanPage from "./pages/lanpage/lanpage"
 
 import Empleado from "./pages/empledo/empleado"
 import CrearEmpleado from "./pages/empledo/CrearEmpleado"
 import ActualizarEmpleado from "./pages/empledo/ActualizarEmpleado"
+import EnviarEmail from "./pages/empledo/enviarEmail"
 
 import Pago from "./pages/pago/pago"
 import CrearPago from "./pages/pago/CrearPago"
@@ -33,6 +35,7 @@ function App() {
       <Route path="/cliente" element={<Cliente/>}/>
       
       <Route path="/login" element={<Login/>}/>
+      <Route path="/enviarEmail" element={<EnviarEmail/>}/>
       <Route path="/empleado" element={<Empleado/>}/>
       <Route path="/empleado/create" element={<CrearEmpleado/>}/>
       <Route path="/empleado/update" element={<ActualizarEmpleado/>}/>
