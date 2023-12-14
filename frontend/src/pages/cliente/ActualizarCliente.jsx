@@ -97,14 +97,11 @@
         return (
             <>
                 <Formik
-                    initialValues={{
-                        tipo_documento: '',
-                        documento: '',
-                        nombre: '',
-                        apellidos: '',
-                        telefono: '',
-                        email: '',
-                    }}
+                     initialValues={ListarActualizar}
+                     enableReinitialize={true}
+                     onSubmit={
+                         handleFormSubmit
+                     }
                     
                     validate={async (values) => {
                         const errors = {};
@@ -159,102 +156,7 @@
                     
                         return errors;
                     }}
-                    enableReinitialize={true}
-                    onSubmit={async (values) => {
-                        try {
-                            if (!values.email.includes("@") || !values.email.includes(".com")) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Correo no valido',
-                                    text: 'Por favor ingresar un correo valido!',
-                                });
-                            } else {
-                                const swalWithBootstrapButtons = Swal.mixin({
-                                    customClass: {
-                                        confirmButton: 'btn btn-success',
-                                        cancelButton: 'btn btn-danger'
-                                    },
-                                    buttonsStyling: false
-                                });
-    
-                                swalWithBootstrapButtons.fire({
-                                    title: 'Confirmar el envio del formulario?',
-                                    text: "",
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonText: 'Aceptar!',
-                                    cancelButtonText: 'Cancelar!',
-                                    buttons: true
-                                }).then(async (result) => {
-                                    if (result.isConfirmed) {
-                                        try {
-                                            const response = await postCliente(values);
-                                            console.log(response);
-    
-                                            if (response.data && response.data.error) {
-                                                // Verificar errores específicos
-                                                if (response.data.error === 'el id de empleado ya existe') {
-                                                    console.log('Mostrar alerta de empleado existente');
-    
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        title: 'Error',
-                                                        text: 'El documento de empleado ya existe.',
-                                                    });
-                                                } else if (response.data.error === 'El correo electrónico ya está registrado') {
-                                                    // Mostrar alerta específica para correo existente
-                                                    swalWithBootstrapButtons.fire({
-                                                        icon: 'error',
-                                                        title: 'Error',
-                                                        text: 'El correo electrónico ya está registrado. Por favor, elige otro correo electrónico.',
-                                                    });
-                                                } else {
-                                                    console.log('Mostrar alerta de otro error');
-    
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        title: 'Error',
-                                                        text: response.data.error,
-                                                    });
-                                                }
-                                            } else {
-                                                // Verificar si se creó el empleado correctamente
-                                                if (response.data && response.data.empleado) {
-                                                    // Si no hay errores, redirige a la página de cliente
-    
-                                                    swalWithBootstrapButtons.fire(
-                                                        'Registro Enviado!',
-    
-                                                    );
-                                                } else {
-                                                    swalWithBootstrapButtons.fire(
-                                                        'Registro Enviado!',
-                                                    ).then(() => {
-                                                        handleCloseModal2()
-                                                    })
-                                                }
-                                            }
-                                        } catch (error) {
-                                            console.error(error);
-                                            swalWithBootstrapButtons.fire(
-                                                'Error',
-                                                'Ocurrió un error al crear el cliente.',
-                                                'error'
-                                            );
-                                        }
-                                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                                        swalWithBootstrapButtons.fire(
-                                            'Se cancelo el envio',
-                                            'error'
-                                        );
-                                    }
-                                });
-                            }
-                        } catch (error) {
-                            console.log(error);
-                        }
-                    }}
-                >
+                    >
                     {({ handleChange, handleSubmit, values, errors, isValid }) => (
                         <div className="modal-content" style={{ position: 'absolute', top: '0%', left: '0%', transform: 'translate(-50%, -50%)', width: '800px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px' }}>
                             <h5 className="card-title">Agregar Cliente</h5>

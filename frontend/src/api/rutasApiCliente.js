@@ -23,4 +23,16 @@ export const postCliente = async (task) => {
   export const actualizarCliente=async (id_Cliente, task)=>{
     return await axios.put(`http://localhost:3001/cliente/update/${id_Cliente}`, task)
   }
+  export const deleteCliente = async (id_Cliente) => {
+    return await axios.delete(`http://localhost:3001/cliente/delete/${id_Cliente}`);
+  }
+
+  export const putDesactivarCliente = async (id_Cliente) => {
+    return await axios.put(`http://localhost:3001/cliente/disable/${id_Cliente}`);
+  }
+
+  export const putActivarCliente = async (id_Cliente) => {
+    return await axios.put(`http://localhost:3001/cliente/activate/${id_Cliente}`);
+  }
+
 

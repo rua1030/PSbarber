@@ -2,7 +2,7 @@
 import Modal from "@mui/material/Modal";
 
 
-const EmpleadoInfo = ({ Empleado, handleCloseModal, open }) => {
+const ClienteInfo = ({ Cliente, handleCloseModal, open }) => {
   const modalStyle = {
     display: "flex",
     alignItems: "center",
@@ -20,32 +20,26 @@ const EmpleadoInfo = ({ Empleado, handleCloseModal, open }) => {
   return (
     <Modal open={open} onClose={handleCloseModal}>
       <div style={modalStyle}>
-        <div style={contentStyle} className="Empleado-info-modal">
+        <div style={contentStyle} className="cliente-info-modal">
           <div>
-            <h3 >Info Empleado</h3>
+            <h3>Info Cliente</h3>
             <p>
-              <strong>ID Empleado:</strong> {Empleado.id_Empleado}
+              <strong>ID Cliente:</strong> {Cliente.id_Cliente}
             </p>
             <p>
-              <strong>Nombre:</strong> {Empleado.nombre} {Empleado.apellidos}
+              <strong>Nombre:</strong> {Cliente.nombre} {Cliente.apellidos}
             </p>
             <p>
-              <strong>Tipo Documento:</strong> {Empleado.tipo_documento}
+              <strong>Tipo Documento:</strong> {Cliente.tipo_documento}
             </p>
             <p>
-              <strong>Documento:</strong> {Empleado.documento}
+              <strong>Documento:</strong> {Cliente.documento}
             </p>
             <p>
-              <strong>Teléfono:</strong> {Empleado.telefono}
+              <strong>Teléfono:</strong> {Cliente.telefono}
             </p>
             <p>
-              <strong>Email:</strong> {Empleado.email}
-            </p>
-            <p>
-            <strong>rol: </strong>{Empleado.rol}
-            </p>
-            <p>
-            <strong>tipo de empleado: </strong>{Empleado.tipo_empleado}
+              <strong>Email:</strong> {Cliente.email}
             </p>
           </div>
           <button className="btn btn-outline-dark me-1" onClick={handleCloseModal}>
@@ -57,4 +51,4 @@ const EmpleadoInfo = ({ Empleado, handleCloseModal, open }) => {
   );
 };
 
-export default EmpleadoInfo;
+export default ClienteInfo;

@@ -111,99 +111,66 @@ async function listarporid(req, res){
   }
 }
 
-// async function desactivarEmpleado(req, res) {
-//   try {
-//       const { id_Cliente } = req.params;
-//       const empleado = await Empleado.findByPk(id_Cliente);
-//       if (!empleado) {
-//           return res.status(404).json({ error: 'Empleado no encontrado' });
-//       }
-//       // Actualiza el estado del empleado a "deshabilitado" (false)
-//       await empleado.update({ estado: false });
+async function desactivarCliente(req, res) {
+  try {
+      const { id_Cliente } = req.params;
+      const cliente = await Cliente.findByPk(id_Cliente);
+      if (!cliente) {
+          return res.status(404).json({ error: 'Cliente no encontrado' });
+      }
 
-//       res.status(200).json({ message: 'Empleado deshabilitado exitosamente' });
-//   } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ error: 'Error al deshabilitar empleado' });
-//   }
-// }
+      // Actualiza el estado del Cliente a "deshabilitado" (false)
+      await cliente.update({ estado: false });
 
-// async function activarEmpleado(req, res) {
-//   try {
-//       const { id_Cliente } = req.params;
-//       const empleado = await Empleado.findByPk(id_Cliente);
-//       if (!empleado) {
-//           return res.status(404).json({ error: 'Empleado no encontrado' });
-//       }
-//       await empleado.update({ estado: true });
+      res.status(200).json({ message: 'Cliente deshabilitado exitosamente' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al deshabilitar cliente' });
+  }
+}
 
-//       res.status(200).json({ message: 'Empleado habilitado exitosamente' });
-//   } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ error: 'Error al habilitar empleado' });
-//   }
-// }
+async function activarCliente(req, res) {
+  try {
+      const { id_Cliente } = req.params;
+      const cliente = await Cliente.findByPk(id_Cliente);
+      if (!cliente) {
+          return res.status(404).json({ error: 'Cliente no encontrado' });
+      }
+      await cliente.update({ estado: true });
 
-// async function eliminarEmpleado(req, res) {
-//   try {
-//       const { id_Cliente } = req.params;
-//       const empleado = await  Empleado.findByPk(id_Cliente);
+      res.status(200).json({ message: 'Cliente habilitado exitosamente' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al habilitar cliente' });
+  }
+}
 
-//       if (!empleado) {
-//           return res.status(404).json({ error: 'Empleado no encontrado' });
-//       }
+async function eliminarCliente(req, res) {
+  try {
+      const { id_Cliente } = req.params;
+      const cliente = await  Cliente.findByPk(id_Cliente);
 
-//       // Elimina el empleado
-//       await empleado.destroy();
+      if (!cliente) {
+          return res.status(404).json({ error: 'Cliente no encontrado' });
+      }
 
-//       res.json({ message: 'Empleado eliminado exitosamente' });
-//   } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ error: 'Error al eliminar empleado' });
-//   }
-// }
+    // Elimina el cliente
+      await cliente.destroy();
 
-// async function login(req, res) {
+      res.json({ message: 'Cliente eliminado exitosamente' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al eliminar cliente' });
+  }
+}
 
-//   const {email, contrasena} = req.body;
-
-//   const empleado = await Empleado.findOne({ where: { email } });
-
-//   if (!empleado) {
-//     return res.status(401).json({ error: 'Authentication failed empleado' });
-//   }
-
-//   const passwordMatch = await bcrypt.compare(contrasena, empleado.contrasena)
-
-//   if (!passwordMatch) {
-//     return res.status(401).json({ error: 'Authentication failed' });
-//   }
-//   if (!empleado.estado) {
-//     return res.status(401).json({ error: 'empleado is not authorized to login' });
-//   }
-//   const rol = await Rol.findByPk(empleado.id_Rol);
-
-//   const token = jwt.sign({ empleadoId: empleado.id_Cliente, email: empleado.email, nombre: empleado.nombres, rol: rol ? rol.nombre : 'Sin rol',  }, secretKey, { expiresIn: '1h' });
-//   res.cookie('token', token, { httpOnly: true });
-
-//   res.status(200).json({ 
-//     token,
-//     Empleados: {
-//       id: empleado.id_Cliente,
-//       email: empleado.email,
-//       nombre: empleado.nombres,
-//       rol: rol ? rol.nombre_rol : 'Sin rol',
-//     },
-//    });
-// }
 
 module.exports = {
   listarCliente,
   crearCliente,
   actualizarCliente,
-//   activarEmpleado,
+  activarCliente,
   listarporid,
-//   eliminarEmpleado,
-//   desactivarEmpleado,
- 
+  eliminarCliente,
+  desactivarCliente,
 };

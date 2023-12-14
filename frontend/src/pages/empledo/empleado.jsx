@@ -7,7 +7,7 @@ import CrearEmpleado from "./CrearEmpleado";
 import ActualizarEmpleado from "./ActualizarEmpleado";
 import Tooltip from '@mui/material/Tooltip';
 import "../../css/pages.css";
-import EmpleadoInfo from './infoEmpleado'
+import ClienteInfo from './infoEmpleado'
 
 
 
@@ -317,8 +317,8 @@ function Empleado() {
   document.body
 )}
 
-            {showInfoModal && selectedEmpleado && ReactDOM.createPortal(
-            <EmpleadoInfo
+          {showInfoModal && selectedEmpleado && ReactDOM.createPortal(
+            <ClienteInfo
               Empleado={selectedEmpleado}
               handleCloseModal={handleCloseInfoModal}
               open={showInfoModal}

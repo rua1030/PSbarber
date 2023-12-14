@@ -1,5 +1,5 @@
 import {createContext , useContext, useState} from "react"
-import {datosCliente, getListarClientes, postCliente } from "../../api/rutasApiCliente";
+import {deleteCliente,putDesactivarCliente,putActivarCliente,datosCliente, getListarClientes,postCliente } from "../../api/rutasApiCliente";
 import Swal from 'sweetalert2';
 
 
@@ -188,11 +188,80 @@ export const ClienteContextProvider = ({ children }) => {
       console.log(error);
     }
   }
+
+  const destroyCliente = async (id_Cliente) => {
+    try {
+      Swal.fire({
+        title: "Eliminar registro?",
+        text: "No podrás revertir esto!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await deleteCliente(id_Cliente);
+          if (response.status === 200) {
+            Swal.fire(
+              "Eliminado!",
+              "El registro ha sido eliminado.",
+              "success"
+            );
+            listaCliente();
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error al eliminar el registro",
+              text: "No se pudo eliminar el registro",
+            });
+          }
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    };
+
+    const desactivarCliente = async (id_Cliente) => {
+      try {
+        const response = await putDesactivarCliente(id_Cliente);
+        if (response.status === 200) {
+          const updatedList = listar.map((item) => {
+            if (item.id_Cliente === id_Cliente) {
+              return { ...item, estado: false };
+            }
+            return item;
+          });
+          setListar(updatedList);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const activarCliente = async (id_Cliente) => {
+      try {
+        const response = await putActivarCliente(id_Cliente);
+        if (response.status === 200) {
+          const updatedList = listar.map((item) => {
+            if (item.id_Cliente === id_Cliente) {
+              return { ...item, estado: true };
+            }
+            return item;
+          });
+          setListar(updatedList);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
     
 
 
         return(
-            <ClienteContext.Provider value={{validacionActualizar,cargarDatosClientes,ListarActualizar,setListarActualizar,agregarCliente,listaCliente,searchTerm,listar,setSearchTerm,filtrarDesactivados }}>
+            <ClienteContext.Provider value={{desactivarCliente,activarCliente,destroyCliente,validacionActualizar,cargarDatosClientes,ListarActualizar,setListarActualizar,agregarCliente,listaCliente,searchTerm,listar,setSearchTerm,filtrarDesactivados }}>
                 {children}
             </ClienteContext.Provider>
             )
