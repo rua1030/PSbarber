@@ -268,7 +268,7 @@ async function enviarEmail(req, res) {
       service: 'gmail',
       auth: {
         user: 'juandavidruaisaza@gmail.com',
-        pass: '1001249557Rua'//cambiar esta parte del codio a un doenv
+        pass: '1001249557Rua'//cambiar esta parte del codigo a un doenv
       }
     });
 

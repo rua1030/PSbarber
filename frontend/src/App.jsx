@@ -2,9 +2,9 @@ import { Route,Routes } from "react-router-dom"
 import { EmpleadoContextProvider } from "./context/empleado/empleadoContex"
 import { RolContextProvider } from "./context/rol/RolContex"
 import { ClienteContextProvider }from"./context/cliente/contexCliente"
+import { ServicioContextProvider } from "./context/servicio/contexServicio"
 
 import Cliente from "./pages/cliente/Cliente"
-
 
 import Login from "./pages/empleado/login"
 import Empleado from "./pages/empleado/empleado"
@@ -13,12 +13,10 @@ import ActualizarEmpleado from "./pages/empleado/ActualizarEmpleado"
 import EnviarEmail from "./pages/empleado/enviarEmail"
 import Pago from "./pages/pago/pago"
 import CrearPago from "./pages/pago/CrearPago"
-
 import Rol from "./pages/rol/Rol"
-
-
-
-
+import Servicio from "./pages/servicio/servicio"
+import ActualizarServicio from "./pages/servicio/ActualizarServicio"
+import CrearServicio from "./pages/servicio/CrearServicio"
 
 function App() {
 
@@ -29,8 +27,13 @@ function App() {
     <EmpleadoContextProvider>
     <RolContextProvider>
     <ClienteContextProvider>
+    <ServicioContextProvider>
     <Routes>
   
+      <Route path="/servicio" element={<Servicio/>}/>
+      {/* <Route path="/servicio/create" element={<CrearServicio/>}/>
+      <Route path="/servicio/update" element={<ActualizarServicio/>}/> */}
+
       <Route path="/cliente" element={<Cliente/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/enviarEmail" element={<EnviarEmail/>}/>
@@ -46,7 +49,8 @@ function App() {
       <Route path="/rol/update" element={<Rol/>}/>
 
     </Routes>
-    
+
+    </ServicioContextProvider>
     </ClienteContextProvider>
     </RolContextProvider>
     </EmpleadoContextProvider>
