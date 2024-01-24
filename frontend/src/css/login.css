@@ -1,5 +1,5 @@
-  .body1{
-    background-image: url(https://i.pinimg.com/736x/99/48/50/994850b10ce5a98e99b60f0c44b73690.jpg);
+   .body1{
+    /* background-image: url(https://i.pinimg.com/736x/99/48/50/994850b10ce5a98e99b60f0c44b73690.jpg); */
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -46,36 +46,36 @@
   .password-toggle .toggle-icon i {
     font-size: 18px;
   }
-  /* Estilos para el formulario */
-  .form-container {
-    max-width: 500px;
-    position: center;
-    margin-top: 5%;
-    margin: 0auto;
-    padding: 20px;
-  }
-
-  /* Estilos para los botones */
-
-  .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-  }
-  .btn-primary:hover {
-    background-color: #0069d9;
-    border-color: #0062cc;
-  }
-  .display-flex{
-    display: flex;
-  }
-  .imagenlogo{
-    width:100%;
-    height:100%;
-  }
   .card{
     background-color: #ffffffb6;
     border-radius: 10px;
     padding-top: 2%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.60);
   }
+  /* Estilos para el formulario */
+  /* .form-container {
+    max-width: 500px;
+    position: center;
+    margin-top: 5%;
+    margin: 0auto;
+    padding: 20px;
+  } */
+
+  /* Estilos para los botones */
+
+  /* .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  } */
+  /* .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  } */
+  /* .display-flex{
+    display: flex;
+  } */
+  /* .imagenlogo{
+    width:100%;
+    height:100%;
+  } */
   

@@ -106,6 +106,14 @@ a {
   color: var(--white-color);
   font-weight: 700
 }
+.nav_logo-name2 {
+  color: var(--first-color-light);  
+  font-weight: 600;
+
+}
+.treslineas{
+  padding-right: 0px;
+}
 
 .nav_link {
   position: relative;

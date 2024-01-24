@@ -90,6 +90,7 @@ async function actualizarCliente(req, res) {
     return res.status(200).json(clienteToUpdate);
   } catch (error) {
     console.error(error);
+    console.log("")
     return res.status(500).send('Error al actualizar el cliente');
   }
 }

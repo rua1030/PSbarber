@@ -114,10 +114,10 @@ return(
                 
               }))}
               columns={[
-                { field: 'id_Cliente', headerName: 'ID', flex: 0,headerClassName: "encabezado-negro", },
-                { field: 'tipo_documento', headerName: 'TD', flex: 0,headerClassName: "encabezado-negro", },
-                { field: 'documento', headerName: 'Documento', flex: 0,headerClassName: "encabezado-negro", },
-                { field: 'nombre', headerName: 'Nombre', flex: 0, headerClassName: "encabezado-negro",},
+                { field: 'id_Cliente', headerName: 'ID', flex: 0.4 ,headerClassName: "encabezado-negro", },
+                { field: 'tipo_documento', headerName: 'TD', flex: 0.4,headerClassName: "encabezado-negro", },
+                { field: 'documento', headerName: 'Documento', flex: 0.4,headerClassName: "encabezado-negro", },
+                { field: 'nombre', headerName: 'Nombre', flex: 0.4, headerClassName: "encabezado-negro",},
                 {
                   field: "estado",
                   headerName: "Estado",
@@ -154,7 +154,7 @@ return(
                 {
                   field: "info",
                   headerName:"Info",
-                  flex:0.1,
+                  flex:1,
                   headerClassName:"encabezado-negro",
                   renderCell: (params)=>(
                     <div>

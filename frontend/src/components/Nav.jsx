@@ -31,7 +31,8 @@ const Nav = () => {
     <>
       <header className="header" id="header">
         <div className="header_toggle" onClick={showNavbar}>
-          <svg xmlns="http://www.w3.org/2000/svg" id="header-toggle" width="24" height="24" viewBox="0 0 24 24">
+            <span className="nav_logo-name2">PS_barberㅤ</span>
+          <svg className='treslineas' xmlns="http://www.w3.org/2000/svg" id="header-toggle" width="24" height="24" viewBox="0 0 24 24">
             <path fill="currentColor" d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
           </svg>
         </div>

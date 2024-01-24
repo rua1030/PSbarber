@@ -6,14 +6,11 @@ import { ClienteContextProvider }from"./context/cliente/contexCliente"
 import Cliente from "./pages/cliente/Cliente"
 
 
-import Login from "./pages/empledo/login"
-import LanPage from "./pages/lanpage/lanpage"
-
-import Empleado from "./pages/empledo/empleado"
-import CrearEmpleado from "./pages/empledo/CrearEmpleado"
-import ActualizarEmpleado from "./pages/empledo/ActualizarEmpleado"
-import EnviarEmail from "./pages/empledo/enviarEmail"
-
+import Login from "./pages/empleado/login"
+import Empleado from "./pages/empleado/empleado"
+import CrearEmpleado from "./pages/empleado/CrearEmpleado"
+import ActualizarEmpleado from "./pages/empleado/ActualizarEmpleado"
+import EnviarEmail from "./pages/empleado/enviarEmail"
 import Pago from "./pages/pago/pago"
 import CrearPago from "./pages/pago/CrearPago"
 
@@ -21,19 +18,20 @@ import Rol from "./pages/rol/Rol"
 
 
 
+
+
 function App() {
+
 
   return (
     <>
+    <div className="w-full h-full bg-zinc-900 font-nunito relative">
     <EmpleadoContextProvider>
     <RolContextProvider>
     <ClienteContextProvider>
-    
     <Routes>
-      <Route path="/" element={<LanPage/>}/>
-
+  
       <Route path="/cliente" element={<Cliente/>}/>
-      
       <Route path="/login" element={<Login/>}/>
       <Route path="/enviarEmail" element={<EnviarEmail/>}/>
       <Route path="/empleado" element={<Empleado/>}/>
@@ -52,6 +50,7 @@ function App() {
     </ClienteContextProvider>
     </RolContextProvider>
     </EmpleadoContextProvider>
+    </div>
     </>
   )
 }
