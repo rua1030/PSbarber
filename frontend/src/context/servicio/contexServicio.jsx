@@ -163,12 +163,8 @@ export const ServicioContextProvider = ({ children }) => {
       const response = ServicioUpdate.data;
 
       setListarActualizar({
+        precio: response.precio,
         nombre: response.nombre,
-        apellidos: response.apellidos,
-        telefono: response.telefono,
-        tipo_documento: response.tipo_documento,
-        documento: response.documento,
-        email: response.email,
         estado: response.estado,
       });
     } catch (error) {

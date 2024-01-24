@@ -25,6 +25,7 @@
       
         validacionActualizar(ServicioId)
         cargarDatosServicios(params.id_Servicio)
+       
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
       },[params.id_Servicio,ServicioId])
@@ -73,7 +74,7 @@
                 Swal.fire({
                   icon: "error",
                   title: "Error en la solicitud",
-                  text: "Documento existente en la base de datos",
+                  text: "el servicio ya existe en la base de datos",
                 });
               });
           } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -99,27 +100,40 @@
                     
                         // Validaciones para el campo "tipoDocumento"
                         if (!values.nombre) {
-                            errors.nombre = 'Este campo es requerido';
-                        } else if (!/^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(values.nombre)) {
-                            errors.nombre = 'Este campo solo debe contener letras. Puede incluir un espacio entre las palabras.';
-                        }
-                    
-                        // Validaciones para el campo "apellidos"
-                        if (!values.precio) {
-                            errors.precio = 'Este campo es requerido y solo se permiten numeros';
-                        }else if (!/^[+-]?\d*\.?\d*$/.test(values.precio)) {
-                            errors.precio = 'El precio debe ser un número';
-                        } else if (parseFloat(values.precio) <= 0) {
-                            errors.precio = 'El precio debe ser mayor que cero';
-                        }
+                          errors.nombre = 'Este campo es requerido';
+                      } else if (!/^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(values.nombre)) {
+                          errors.nombre = 'Este campo solo debe contener letras. Puede incluir un espacio entre las palabras.';
+                      }
+                  
+                      // Validaciones para el campo "apellidos"
+                      if (!values.precio) {
+                          errors.precio = 'Este campo es requerido y solo se permiten números';
+                      } else if (!/^[+-]?\d+$/.test(values.precio)) {
+                          errors.precio = 'El precio debe ser un número entero';
+                      } else if (parseInt(values.precio, 10) <= 0) {
+                          errors.precio = 'El precio debe ser mayor que cero';
+                      }
 
-                    
-                        // Validación para no-leading-trailing-space en cualquier campo
-                        for (const key in values) {
-                            if (typeof values[key] === 'string' && /^\s|\s$/.test(values[key])) {
-                                errors[key] = 'No debe empezar ni terminar con un espacio en blanco';
-                            }
-                        }
+                  
+                      // Validación para no-leading-trailing-space en cualquier campo
+                      for (const key in values) {
+                          if (typeof values[key] === 'string') {
+                              // Validar espacios en blanco al principio o al final
+                              if (/^\s|\s$/.test(values[key])) {
+                                  errors[key] = 'No debe empezar ni terminar con un espacio en blanco';
+                              }
+                      
+                              // Validar que el campo 'precio' solo contenga números enteros
+                              if (key === 'precio') {
+                                  if (!/^[+-]?\d+$/.test(values[key])) {
+                                      errors[key] = 'El precio debe ser un número entero';
+                                  } else if (parseInt(values[key], 10) <= 0) {
+                                      errors[key] = 'El precio debe ser mayor que cero';
+                                  }
+                              }
+                          }
+                      }
+                      
                     
                         return errors;
                     }}
@@ -133,7 +147,7 @@
                                     <Field
                                         type="text"
                                         name="nombre"
-                                        label='Nombre del servicio'
+                                        label=''
                                         onChange={handleChange}
                                         value={values.nombre}
                                         as={TextField}
@@ -160,31 +174,32 @@
                                     </div>
                                     <div className="">
                                     <Field
-    type="number"  // Cambié el tipo a "text" para permitir texto y números
-    name="precio"
-    label='Precio'
-    className={`${errors.precio ? 'is-invalid' : ''}`}
-    id="precio"
-    required
-    as={TextField}
-    onChange={handleChange}
-    value={values.precio}
-    InputProps={{
-        endAdornment: (
-            <React.Fragment>
-                {errors.precio ? (
-                    <ErrorIcon style={{ color: 'red' }} />
-                ) : (
-                    <CheckIcon style={{ color: 'green' }} />
-                )}
-            </React.Fragment>
-        ),
-    }}
-    style={{ width: '100%', height: '40px', marginBottom: '15px' }}
-/>
-{errors.precio && (
-    <div className='invalid-feedback'>{errors.precio}</div>
-)}
+                                            type="text"  // Cambié el tipo a "text" para permitir texto y números
+                                            name="precio"
+                                            label='Precio'
+                                            id="precio"
+                                            required
+                                            as={TextField}
+                                            className={`${values.precio && /^[+-]?\d*\.?\d*$/.test(values.precio) ? 'is-valid' : 'is-invalid'}`}
+                                            onChange={handleChange}
+                                            value={values.precio}
+                                            InputProps={{
+                                                endAdornment: (
+                                                    <React.Fragment>
+                                                        {values.precio && /^[+-]?\d*\.?\d*$/.test(values.precio) ? (
+                                                            <CheckIcon style={{ color: 'green' }} />
+                                                        ) : (
+                                                            <ErrorIcon style={{ color: 'red' }} />
+                                                        )}
+                                                    </React.Fragment>
+                                                ),
+                                            }}
+                                            style={{ width: '100%', height: '40px', marginBottom: '15px' }}
+                                        />
+                                        {errors.precio && (
+                                            <div className='invalid-feedback'>{errors.precio}</div>
+                                        )}
+
 
 
                                     </div>

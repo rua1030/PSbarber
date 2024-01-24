@@ -105,13 +105,13 @@ return(
                 
               }))}
               columns={[
-                { field: 'id_Servicio', headerName: 'ID', flex: 0.4 ,headerClassName: "encabezado-negro", },
-                { field: 'nombre', headerName: 'Nombre', flex: 0.4, headerClassName: "encabezado-negro",},
-                { field: 'precio', headerName: 'Precio', flex: 0.4,headerClassName: "encabezado-negro", },
+                { field: 'id_Servicio', headerName: 'ID', flex: 0.5 ,headerClassName: "encabezado-negro", },
+                { field: 'nombre', headerName: 'Nombre', flex: 0.9, headerClassName: "encabezado-negro",},
+                { field: 'precio', headerName: 'Precio', flex: 0.5,headerClassName: "encabezado-negro", },
                 {
                   field: "estado",
                   headerName: "Estado",
-                  flex: 0,
+                  flex: 0.5,
                   headerClassName: "encabezado-negro",
                   renderCell: (params) => ( 
                     <Tooltip
@@ -218,7 +218,7 @@ return(
     />
     <div className="modal-create" style={{position: 'fixed', top: '50%', left: '50%', transform: 'translateX(-50%)', zIndex: 1050, 
       maxHeight: '25vh', overflowY: 'visible', display: 'flex', alignItems: 'center' }}>
-      <div style={{ width: '300%', height: '300%' }}>
+      <div style={{ width: '10%', height: '10%' }}>
         <CrearServicio handleSubmitForm={handleSubmitForm} handleCloseModal={handleCloseModal} />
       </div>
     </div>
