@@ -90,7 +90,8 @@ a {
   grid-template-columns: max-content max-content;
   align-items: center;
   column-gap: 1rem;
-  padding: .5rem 0 .5rem 1.5rem
+  padding: .2rem 0 .5rem 1.5rem
+
 }
 
 .nav_logo {
@@ -138,18 +139,18 @@ a {
   padding-left: calc(var(--nav-width) + 1rem)
 }
 
-.active {
+/* .active {
   color: var(--white-color)
-}
+} */
 
-.active::before {
+/* .active::before {
   content: '';
   position: absolute;
   left: 0;
   width: 2px;
   height: 32px;
   background-color: var(--white-color)
-}
+} */
 
 .height-100 {
   height: 100vh
