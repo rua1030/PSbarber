@@ -15,8 +15,7 @@ import Pago from "./pages/pago/pago"
 import CrearPago from "./pages/pago/CrearPago"
 import Rol from "./pages/rol/Rol"
 import Servicio from "./pages/servicio/servicio"
-import ActualizarServicio from "./pages/servicio/ActualizarServicio"
-import CrearServicio from "./pages/servicio/CrearServicio"
+import Landingpage from "./pages/agenda/crearCita"
 
 function App() {
 
@@ -28,12 +27,13 @@ function App() {
     <RolContextProvider>
     <ClienteContextProvider>
     <ServicioContextProvider>
+    
     <Routes>
   
       <Route path="/servicio" element={<Servicio/>}/>
       {/* <Route path="/servicio/create" element={<CrearServicio/>}/>
       <Route path="/servicio/update" element={<ActualizarServicio/>}/> */}
-
+      <Route path="/" element={<Landingpage/>}/>
       <Route path="/cliente" element={<Cliente/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/enviarEmail" element={<EnviarEmail/>}/>
