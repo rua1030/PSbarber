@@ -90,7 +90,7 @@ return(
     <div className="container mt-5">
       <div className="card text-center">
         <div className="card-body">
-          <h5 className="card-title">Tabla de Clientes</h5>
+          <h5 className="card-title">Gestion de Clientes</h5>
           <div className="d-flex justify-content-between">
             <div className="d-flex justify-content-between align-items-center mb-3">
              <button type="button" onClick={handleOpenModal} className="btn btn-dark">Agregar cliente</button>

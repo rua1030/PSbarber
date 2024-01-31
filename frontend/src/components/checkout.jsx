@@ -83,6 +83,46 @@ const FormularioPasoAPaso = () => {
     }
   };
 
+  const renderStep = () => {
+    switch (pasoActual) {
+      case 1:
+        return (
+          <Step1
+            fecha={fecha}
+            setFecha={setFecha}
+            horaSeleccionada={horaSeleccionada}
+            handleFechaHoraSubmit={handleFechaHoraSubmit}
+            generarHorasDisponibles={generarHorasDisponibles}
+            seleccionarHora={seleccionarHora}
+          />
+        );
+      case 2:
+        return (
+          <Step2
+            servicios={servicios}
+            setServicios={setServicios}
+            serviciosDisponibles={serviciosDisponibles}
+            handleServiciosSubmit={handleServiciosSubmit}
+            retrocederPaso={retrocederPaso}
+          />
+        );
+      case 3:
+        return (
+          <Step3
+            nombre={nombre}
+            setNombre={setNombre}
+            correo={correo}
+            setCorreo={setCorreo}
+            telefono={telefono}
+            setTelefono={setTelefono}
+            handleFinalSubmit={handleFinalSubmit}
+            retrocederPaso={retrocederPaso}
+          />
+        );
+      default:
+        return null;
+    }
+  };
   return (
     <div className="containerr">
       <h3>Agenda con nosotros</h3>

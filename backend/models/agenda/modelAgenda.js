@@ -12,7 +12,7 @@ const Agenda=sequelize.define('agendas',{
     correo:DataTypes.STRING,
     telefono:DataTypes.STRING,
     fecha:DataTypes.STRING,
-    hora:DataTypes.TIME,
+    hora:DataTypes.STRING,
     estado:DataTypes.BOOLEAN,
     id_Empleado: DataTypes.INTEGER 
 },{

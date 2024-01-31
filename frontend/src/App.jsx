@@ -3,6 +3,7 @@ import { EmpleadoContextProvider } from "./context/empleado/empleadoContex"
 import { RolContextProvider } from "./context/rol/RolContex"
 import { ClienteContextProvider }from"./context/cliente/contexCliente"
 import { ServicioContextProvider } from "./context/servicio/contexServicio"
+import { AgendaContextProvider } from "./context/Agenda/contexAgenda"
 
 import Cliente from "./pages/cliente/Cliente"
 
@@ -16,6 +17,9 @@ import CrearPago from "./pages/pago/CrearPago"
 import Rol from "./pages/rol/Rol"
 import Servicio from "./pages/servicio/servicio"
 import Landingpage from "./pages/agenda/crearCita"
+import Agenda from "./pages/agenda/Agenda"
+
+
 
 function App() {
 
@@ -23,13 +27,15 @@ function App() {
   return (
     <>
     <div className="w-full h-full bg-zinc-900 font-nunito relative">
+    <AgendaContextProvider>
     <EmpleadoContextProvider>
     <RolContextProvider>
     <ClienteContextProvider>
     <ServicioContextProvider>
     
+
     <Routes>
-  
+      <Route path="/agenda" element={<Agenda/>}/>   
       <Route path="/servicio" element={<Servicio/>}/>
       {/* <Route path="/servicio/create" element={<CrearServicio/>}/>
       <Route path="/servicio/update" element={<ActualizarServicio/>}/> */}
@@ -54,6 +60,7 @@ function App() {
     </ClienteContextProvider>
     </RolContextProvider>
     </EmpleadoContextProvider>
+    </AgendaContextProvider>
     </div>
     </>
   )

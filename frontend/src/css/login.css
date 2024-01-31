@@ -1,8 +1,14 @@
+body{
+  background-color: #eee;
+  font-family: 'Playfair Display', serif;
+}
+
    .body1{
     /* background-image: url(https://i.pinimg.com/736x/99/48/50/994850b10ce5a98e99b60f0c44b73690.jpg); */
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+
   }
   .logo-card {
     width: 100%;
