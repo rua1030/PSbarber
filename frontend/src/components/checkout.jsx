@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import '../css/LandingPage.css';
@@ -6,7 +6,7 @@ import '../css/Navbar.css';
 import HorarioCarousel from './HorarioCarousel';
 import Pasos from './pasos';
 import { getListarServicios } from '../api/rutasApiServicio';
-import { obtenerHorasDisponibles } from '../api/rutasApiagenda';
+import { obtenerHorasDisponibles,postAgenda } from '../api/rutasApiagenda';
 
 const FormularioPasoAPaso = () => {
   const [pasoActual, setPasoActual] = useState(1);
@@ -61,13 +61,35 @@ const FormularioPasoAPaso = () => {
     setPasoActual(pasoActual + 1);
   };
 
-  const handleFinalSubmit = (event) => {
+  const handleFinalSubmit = async (event) => {
     event.preventDefault();
-    console.log('Nombre:', nombre);
-    console.log('Correo:', correo);
-    console.log('Teléfono:', telefono);
-    // Puedes enviar la información del formulario aquí
+  
+    try {
+      // Construir el objeto de datos que deseas enviar al servidor
+      const data = {
+        nombre,
+        correo,
+        telefono,
+        fecha,
+        hora: horaSeleccionada,
+        id_Empleado: 46, // Puedes cambiar esto según tus necesidades
+        servicios: servicios.map(servicio => ({ id_Servicio: servicio.id_Servicio }))
+      };
+      console.log("este es la data",data)
+  
+      // Realizar la solicitud POST a tu API
+      const response = await postAgenda(data);
+  
+      // Hacer algo con la respuesta, por ejemplo, mostrar un mensaje al usuario
+      console.log('Respuesta de la API:', response);
+  
+      // Puedes redirigir al usuario a una página de confirmación o realizar otras acciones necesarias
+    } catch (error) {
+      console.error('Error al enviar la solicitud de agenda:', error);
+      // Manejar el error según tus necesidades, mostrar un mensaje al usuario, etc.
+    }
   };
+  
 
   const generarHorasDisponibles = () => {
     return horasDisponibles;
@@ -83,46 +105,6 @@ const FormularioPasoAPaso = () => {
     }
   };
 
-  const renderStep = () => {
-    switch (pasoActual) {
-      case 1:
-        return (
-          <Step1
-            fecha={fecha}
-            setFecha={setFecha}
-            horaSeleccionada={horaSeleccionada}
-            handleFechaHoraSubmit={handleFechaHoraSubmit}
-            generarHorasDisponibles={generarHorasDisponibles}
-            seleccionarHora={seleccionarHora}
-          />
-        );
-      case 2:
-        return (
-          <Step2
-            servicios={servicios}
-            setServicios={setServicios}
-            serviciosDisponibles={serviciosDisponibles}
-            handleServiciosSubmit={handleServiciosSubmit}
-            retrocederPaso={retrocederPaso}
-          />
-        );
-      case 3:
-        return (
-          <Step3
-            nombre={nombre}
-            setNombre={setNombre}
-            correo={correo}
-            setCorreo={setCorreo}
-            telefono={telefono}
-            setTelefono={setTelefono}
-            handleFinalSubmit={handleFinalSubmit}
-            retrocederPaso={retrocederPaso}
-          />
-        );
-      default:
-        return null;
-    }
-  };
   return (
     <div className="containerr">
       <h3>Agenda con nosotros</h3>
