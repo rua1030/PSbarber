@@ -185,7 +185,7 @@
                                         onChange={handleChange}
                                         value={values.nombre}
                                         as={TextField}
-                                        className={`${values.nombre && /^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(values.nombre) ? 'is-valid' : 'is-invalid'}`}
+                                        className={`${values.nombre && /^[a-zA-Z]+(?:[a-zA-Z]+)*$/.test(values.nombre) ? 'is-valid' : 'is-invalid'}`}
                                         InputProps={{
                                             endAdornment: (
                                                 <React.Fragment>

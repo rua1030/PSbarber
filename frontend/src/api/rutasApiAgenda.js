@@ -1,4 +1,3 @@
-// En tu archivo rutasApiAgenda.js
 import axios from 'axios';
 
 export const obtenerHorasDisponibles = async (fecha) => {

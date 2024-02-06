@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import '../css/LandingPage.css';
 import '../css/Navbar.css';
 import HorarioCarousel from './HorarioCarousel';
 import Pasos from './pasos';
 import { getListarServicios } from '../api/rutasApiServicio';
-import { obtenerHorasDisponibles,postAgenda } from '../api/rutasApiagenda';
+import { obtenerHorasDisponibles, postAgenda } from '../api/rutasApiagenda';
+
 
 const FormularioPasoAPaso = () => {
   const [pasoActual, setPasoActual] = useState(1);
@@ -18,6 +21,14 @@ const FormularioPasoAPaso = () => {
   const [telefono, setTelefono] = useState('');
   const [serviciosDisponibles, setServiciosDisponibles] = useState([]);
   const [horasDisponibles, setHorasDisponibles] = useState([]);
+
+  // Estados para mensajes de error
+  const [fechaError, setFechaError] = useState('');
+  const [horaError, setHoraError] = useState('');
+  const [serviciosError, setServiciosError] = useState('');
+  const [nombreError, setNombreError] = useState('');
+  const [correoError, setCorreoError] = useState('');
+  const [telefonoError, setTelefonoError] = useState('');
 
   useEffect(() => {
     const fetchServicios = async () => {
@@ -48,47 +59,169 @@ const FormularioPasoAPaso = () => {
     fetchHorasDisponibles();
   }, [fecha]);
 
+  const validarFecha = () => {
+    if (!fecha) {
+      setFechaError('Debe seleccionar una fecha.');
+      return false;
+    }
+    setFechaError('');
+    return true;
+  };
+
+  const validarHora = () => {
+    if (!horaSeleccionada) {
+      setHoraError('Debe seleccionar una hora.');
+      return false;
+    }
+    setHoraError('');
+    return true;
+  };
+
+  const validarServicios = () => {
+    if (servicios.length === 0) {
+      setServiciosError('Debe seleccionar al menos un servicio.');
+      return false;
+    }
+    setServiciosError('');
+    return true;
+  };
+
+  const validarNombre = () => {
+    const nombreRegex = /^[a-zA-Z ]+$/;
+    if (!nombre) {
+      setNombreError('Debe ingresar su nombre.');
+      return false;
+    }
+    if (!nombreRegex.test(nombre)) {
+      setNombreError('El nombre no puede contener números ni caracteres especiales.');
+      return false;
+    }
+    setNombreError('');
+    return true;
+  };
+  
+  const validarCorreo = () => {
+    const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!correo) {
+      setCorreoError('Debe ingresar un correo válido.');
+      return false;
+    }
+    if (!correoRegex.test(correo)) {
+      setCorreoError('El correo no cumple con el formato válido.');
+      return false;
+    }
+    setCorreoError('');
+    return true;
+  };
+  
+  const validarTelefono = () => {
+    const telefonoRegex = /^[0-9]+$/;
+    if (!telefono) {
+      setTelefonoError('Debe ingresar un número de teléfono.');
+      return false;
+    }
+    if (!telefonoRegex.test(telefono)) {
+      setTelefonoError('El teléfono solo puede contener números.');
+      return false;
+    }
+    setTelefonoError('');
+    return true;
+  };
+
   const handleFechaHoraSubmit = (event) => {
     event.preventDefault();
-    console.log('Fecha:', fecha);
-    console.log('Hora:', horaSeleccionada);
-    setPasoActual(pasoActual + 1);
+
+    if (validarFecha() && validarHora()) {
+      setPasoActual(pasoActual + 1);
+    }
   };
 
   const handleServiciosSubmit = (event) => {
     event.preventDefault();
-    console.log('Servicios seleccionados:', servicios);
-    setPasoActual(pasoActual + 1);
-  };
 
-  const handleFinalSubmit = async (event) => {
-    event.preventDefault();
-  
-    try {
-      // Construir el objeto de datos que deseas enviar al servidor
-      const data = {
-        nombre,
-        correo,
-        telefono,
-        fecha,
-        hora: horaSeleccionada,
-        id_Empleado: 46, // Puedes cambiar esto según tus necesidades
-        servicios: servicios.map(servicio => ({ id_Servicio: servicio.id_Servicio }))
-      };
-      console.log("este es la data",data)
-  
-      // Realizar la solicitud POST a tu API
-      const response = await postAgenda(data);
-  
-      // Hacer algo con la respuesta, por ejemplo, mostrar un mensaje al usuario
-      console.log('Respuesta de la API:', response);
-  
-      // Puedes redirigir al usuario a una página de confirmación o realizar otras acciones necesarias
-    } catch (error) {
-      console.error('Error al enviar la solicitud de agenda:', error);
-      // Manejar el error según tus necesidades, mostrar un mensaje al usuario, etc.
+    if (validarServicios()) {
+      setPasoActual(pasoActual + 1);
     }
   };
+
+ const handleFinalSubmit = async (event) => {
+    event.preventDefault();
+  
+    if (
+      validarNombre() &&
+      validarCorreo() &&
+      validarTelefono() &&
+      validarFecha() &&
+      validarHora() &&
+      validarServicios()
+    ) {
+      // Mostrar SweetAlert para confirmar la cita
+      const confirmResult = await Swal.fire({
+        title: '¿Estás seguro de que quieres agendar esta cita?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, agendar',
+        cancelButtonText: 'Cancelar',
+      });
+      console.log('Confirm Result:', confirmResult);
+  
+      if (confirmResult.isConfirmed) {
+        console.log('Confirmado');
+  
+        // Continuar con el proceso de agendar la cita
+        try {
+          const data = {
+            nombre,
+            correo,
+            telefono,
+            fecha,
+            hora: horaSeleccionada,
+            id_Empleado: 45,
+            servicios: servicios.map(servicio => ({ id_Servicio: servicio.id_Servicio }))
+          };
+  
+          const response = await postAgenda(data);
+          console.log('Respuesta de la API:', response);
+          
+          if (response && response.data && response.data.citaCreada) {
+            // Mostrar SweetAlert con el mensaje de éxito
+            Swal.fire({
+                title: 'Registro Exitoso',
+                text: 'Cita creada exitosamente.',
+                icon: 'success',
+                confirmButtonText: 'Volver a Agendar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirigir a la página de agendar (o recargar la página actual)
+                    window.location.reload();
+                }
+            });
+          } else {
+            console.error('La respuesta de la API no contiene la información esperada:', response);
+            // Mostrar SweetAlert con mensaje de error
+            Swal.fire({
+                title: 'Error al Agendar',
+                text: 'No se pudo agendar la cita. Por favor, inténtalo de nuevo.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
+          }
+        } catch (error) {
+          console.error('Error al enviar la solicitud de agenda:', error);
+          // Mostrar SweetAlert con mensaje de error
+          Swal.fire({
+              title: 'Error al Agendar',
+              text: 'Hubo un problema al agendar la cita. Por favor, inténtalo de nuevo.',
+              icon: 'error',
+              confirmButtonText: 'Cerrar'
+          });
+        }
+      }
+    }
+};
+
+
+  
   
 
   const generarHorasDisponibles = () => {
@@ -121,12 +254,13 @@ const FormularioPasoAPaso = () => {
                   <label htmlFor="fecha">Fecha:</label>
                   <input
                     type="date"
-                    className="form-control"
+                    className={`form-control ${fechaError ? 'is-invalid' : ''}`}
                     id="fecha"
                     value={fecha}
                     onChange={(e) => setFecha(e.target.value)}
                     required
                   />
+                  {fechaError && <div className="invalid-feedback">{fechaError}</div>}
                 </div>
                 <div className="form-group">
                   <label>Selecciona la hora:</label>
@@ -163,6 +297,7 @@ const FormularioPasoAPaso = () => {
                       <TextField {...params} label='Servicios' variant='outlined' />
                     )}
                   />
+                  {serviciosError && <div className="invalid-feedback">{serviciosError}</div>}
                 </div>
                 <div className="pb-2 pt-2 d-flex justify-content-between">
                   <button type="button" className="btn btn-secondary" onClick={retrocederPaso}>
@@ -180,34 +315,37 @@ const FormularioPasoAPaso = () => {
                   <label htmlFor="nombre">Nombre:</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={`form-control ${nombreError ? 'is-invalid' : ''}`}
                     id="nombre"
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     required
                   />
+                  {nombreError && <div className="invalid-feedback">{nombreError}</div>}
                 </div>
                 <div className="form-group">
                   <label htmlFor="correo">Correo:</label>
                   <input
                     type="email"
-                    className="form-control"
+                    className={`form-control ${correoError ? 'is-invalid' : ''}`}
                     id="correo"
                     value={correo}
                     onChange={(e) => setCorreo(e.target.value)}
                     required
                   />
+                  {correoError && <div className="invalid-feedback">{correoError}</div>}
                 </div>
                 <div className="form-group">
                   <label htmlFor="telefono">Teléfono:</label>
                   <input
                     type="tel"
-                    className="form-control"
+                    className={`form-control ${telefonoError ? 'is-invalid' : ''}`}
                     id="telefono"
                     value={telefono}
                     onChange={(e) => setTelefono(e.target.value)}
                     required
                   />
+                  {telefonoError && <div className="invalid-feedback">{telefonoError}</div>}
                 </div>
                 <div className='pb-2 pt-2 d-flex justify-content-between'>
                   <button type="button" className="btn btn-secondary" onClick={retrocederPaso}>
@@ -225,5 +363,4 @@ const FormularioPasoAPaso = () => {
     </div>
   );
 };
-
 export default FormularioPasoAPaso;

@@ -84,12 +84,12 @@ const LandingPage = () => {
                   <div className="horario">
                     {/* Agrega aquí tu contenido de horario */}
                     <p style={{ opacity: 0.5 }}>Lunes: cerrado</p>
-                    <p>Martes: 7:00 am - 10:00 pm</p>
-                    <p>Miercoles: 7:00 am - 10:00 pm</p>
-                    <p>Jueves: 7:00 am - 9:00 pm</p>
-                    <p>Viernes: 7:00 am - 9:00 pm</p>
-                    <p>Sabado: :00 am - 11:00 pm</p>
-                    <p>Domingo: 9:00 am - 10:00 pm</p>
+                    <p>Martes: 7:00 am - 7:00 pm</p>
+                    <p>Miercoles: 7:00 am - 7:00 pm</p>
+                    <p>Jueves: 7:00 am - 7:00 pm</p>
+                    <p>Viernes: 7:00 am - 7:00 pm</p>
+                    <p>Sabado: 7:00 am - 7:00 pm</p>
+                    <p>Domingo: 7:00 am - 7:00 pm</p>
                     {/* ... Agrega los demás días y horarios */}
                   </div>
                 )}
