@@ -64,14 +64,14 @@ return(
     <Nav/>
     <main id="main" className="main">
     <div className="pagetitle">
-      <h1>Lista Servicios</h1>
+      <h1>Gestion de Servicios</h1>
       <nav>
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
             <a href="/home">Home</a>
           </li>
           <li className="breadcrumb-item active">
-            <a href="/Servicio">Listar Servicios</a>
+            <a href="/Servicio">Gestion de Servicios</a>
           </li>
         </ol>
       </nav>
@@ -79,7 +79,7 @@ return(
     <div className="container mt-5">
       <div className="card text-center">
         <div className="card-body">
-          <h5 className="card-title">Gestion de Servicios</h5>
+          <h5 className="card-title"></h5>
           <div className="d-flex justify-content-between">
             <div className="d-flex justify-content-between align-items-center mb-3">
              <button type="button" 

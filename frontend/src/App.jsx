@@ -18,8 +18,7 @@ import Rol from "./pages/rol/Rol"
 import Servicio from "./pages/servicio/servicio"
 import Landingpage from "./pages/agenda/crearCita"
 import Agenda from "./pages/agenda/Agenda"
-
-
+import Dashboard from "./pages/dashboard/dashboard"
 
 function App() {
 
@@ -38,7 +37,8 @@ function App() {
       <Route path="/agenda" element={<Agenda/>}/>   
       <Route path="/servicio" element={<Servicio/>}/>
       {/* <Route path="/servicio/create" element={<CrearServicio/>}/>
-      <Route path="/servicio/update" element={<ActualizarServicio/>}/> */}
+      <Route   path="/servicio/update" element={<ActualizarServicio/>}/> */}
+      <Route path="/home" element={<Dashboard/>}/>
       <Route path="/" element={<Landingpage/>}/>
       <Route path="/cliente" element={<Cliente/>}/>
       <Route path="/login" element={<Login/>}/>

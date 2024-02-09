@@ -4,6 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import Nav from "../../components/Nav"
 import ReactDOM from 'react-dom';
 import Tooltip from '@mui/material/Tooltip';
+import ModalCrearAgenda from '../agenda/modalCrearAgenda'
 
 
 import "../../css/pages.css";
@@ -17,11 +18,27 @@ function Agenda(){
 
   const [selectedAgenda, setSelectedAgenda] = useState(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
 
   useEffect(() => {
     listaAgenda();
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[searchTerm]);
+
+ const handleOpenModal = () => {
+  setOpenCreateModal(true);
+};
+
+// Manejo envío formulario
+const handleSubmitForm = async (formData) => {
+agregarAgenda(formData)
+};
+
+// Cerrar modal create
+const handleCloseModal = () => {
+setOpenCreateModal(false);
+listaEmpleado()
+}; 
 
 
   // // Modal de información
@@ -43,14 +60,14 @@ return(
     <Nav/>
     <main id="main" className="main">
     <div className="pagetitle">
-      <h1>Lista Agendas</h1>
+      <h1>Gestion de Cita</h1>
       <nav>
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
             <a href="/home">Home</a>
           </li>
           <li className="breadcrumb-item active">
-            <a href="/Agenda">Listar Agendas</a>
+            <a href="/Agenda">Gestion de Citas</a>
           </li>
         </ol>
       </nav>
@@ -58,8 +75,14 @@ return(
     <div className="container mt-5">
       <div className="card text-center">
         <div className="card-body">
-          <h5 className="card-title">Gestion de Cita</h5>
+          <h5 className="card-title"></h5>
           <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between align-items-center mb-3">
+                  
+                  <button type="button" className="btn btn-dark" onClick={handleOpenModal}>
+                  Agregar cita
+                  </button>
+                </div>  
             <div className="d-flex justify-content-between align-items-center mb-3">
             <input
                   type="text"
@@ -80,6 +103,7 @@ return(
               columns={[
                 { field: 'id_agenda', headerName: 'ID', flex: 0.4 ,headerClassName: "encabezado-negro", },
                 { field: 'nombre', headerName: 'Nombre', flex: 0.4,headerClassName: "encabezado-negro", },
+                { field: 'telefono', headerName: 'Telefono', flex: 0.4,headerClassName: "encabezado-negro", },
                 { field: 'fecha', headerName: 'Fecha', flex: 0.4,headerClassName: "encabezado-negro", },
                 { field: 'hora', headerName: 'Hora', flex: 0.4, headerClassName: "encabezado-negro",},
                 {
@@ -188,7 +212,24 @@ return(
       </div>
     </div>
     </main>
-
+    {/* modal de crear empleado */}
+    {openCreateModal && ReactDOM.createPortal(
+    <>
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      zIndex: 1049,
+    }}
+    onClick={handleCloseModal}
+    />
+    <div className="modal-create" style={{position: 'fixed', top: '50%', left: '50%', transform: 'translateX(-50%)', zIndex: 1050, 
+      maxHeight: '25vh', overflowY: 'visible', display: 'flex', alignItems: 'center' }}>
+      <div style={{ width: '300%', height: '300%' }}>
+        <ModalCrearAgenda handleSubmitForm={handleSubmitForm} handleCloseModal={handleCloseModal} />
+      </div>
+    </div>
+  </>,
+  document.body
+)}
 
       {showInfoModal && selectedAgenda && ReactDOM.createPortal(
             <AgendaInfo

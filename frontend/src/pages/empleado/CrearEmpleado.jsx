@@ -16,7 +16,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 
 const opcionesDocumento = [
-    { value: 'TI', label: 'Tarjeta de Identidad (T.I)' },
     { value: 'CC', label: 'Cédula de Ciudadanía (C.C)' },
     { value: 'CE', label: 'Cédula de Extranjería (C.E)' },
 ];
@@ -103,7 +102,10 @@ const CrearEmpleado = ({ handleCloseModal }) => {
                         errors.contrasena = 'Este campo es requerido';
                     } else if (values.contrasena.length < 8) {
                         errors.contrasena = 'La contraseña debe tener al menos 8 caracteres';
-                    } else if (!/(?=.*[A-Z])/.test(values.contrasena)) {
+                    }else if (values.contrasena.length > 15) {
+                        errors.contrasena = 'La contraseña debe tener menos de 15  caracteres';
+                    }
+                     else if (!/(?=.*[A-Z])/.test(values.contrasena)) {
                         errors.contrasena = 'La contraseña debe contener al menos una letra mayúscula';
                     } else if (!/(?=.*[a-z])/.test(values.contrasena)) {
                         errors.contrasena = 'La contraseña debe contener al menos una letra minúscula';

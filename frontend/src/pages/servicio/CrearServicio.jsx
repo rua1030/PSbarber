@@ -59,7 +59,8 @@
                             errors.precio = 'Este campo es requerido y solo se permiten números';
                         } else if (!/^[+-]?\d+$/.test(values.precio)) {
                             errors.precio = 'El precio debe ser un número entero';
-                        } else if (parseInt(values.precio, 10) <= 0) {
+                        }
+                        else if (parseInt(values.precio, 10) < 1000) {
                             errors.precio = 'El precio debe ser mayor que cero';
                         }
 
@@ -76,7 +77,7 @@
                                 if (key === 'precio') {
                                     if (!/^[+-]?\d+$/.test(values[key])) {
                                         errors[key] = 'El precio debe ser un número entero';
-                                    } else if (parseInt(values[key], 10) <= 0) {
+                                    } else if (parseInt(values[key], 10) <= 1000) {
                                         errors[key] = 'El precio debe ser mayor que cero';
                                     }
                                 }
@@ -220,7 +221,7 @@
                                             InputProps={{
                                                 endAdornment: (
                                                     <React.Fragment>
-                                                        {values.precio && /^[+-]?\d*\.?\d*$/.test(values.precio) ? (
+                                                        {values.precio && /^[+-]?\d+$/.test(values.precio) ? (
                                                             <CheckIcon style={{ color: 'green' }} />
                                                         ) : (
                                                             <ErrorIcon style={{ color: 'red' }} />

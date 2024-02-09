@@ -11,6 +11,7 @@ import { getListarServicios } from '../api/rutasApiServicio';
 import { obtenerHorasDisponibles, postAgenda } from '../api/rutasApiagenda';
 
 
+
 const FormularioPasoAPaso = () => {
   const [pasoActual, setPasoActual] = useState(1);
   const [fecha, setFecha] = useState('');
@@ -22,7 +23,7 @@ const FormularioPasoAPaso = () => {
   const [serviciosDisponibles, setServiciosDisponibles] = useState([]);
   const [horasDisponibles, setHorasDisponibles] = useState([]);
 
-  // Estados para mensajes de error
+  // Estados para mensajes de    error
   const [fechaError, setFechaError] = useState('');
   const [horaError, setHoraError] = useState('');
   const [serviciosError, setServiciosError] = useState('');
@@ -87,7 +88,11 @@ const FormularioPasoAPaso = () => {
   };
 
   const validarNombre = () => {
-    const nombreRegex = /^[a-zA-Z ]+$/;
+    const nombreRegex = /^[a-zA-Z]+$/;
+    if (nombre.length >  15) {
+      setNombreError('Debe ingresar su nombre menor de 15 caracteres');
+      return false;
+    }
     if (!nombre) {
       setNombreError('Debe ingresar su nombre.');
       return false;
@@ -116,6 +121,10 @@ const FormularioPasoAPaso = () => {
   
   const validarTelefono = () => {
     const telefonoRegex = /^[0-9]+$/;
+    if (telefono.length > 10) {
+      setTelefonoError('ingresa un numero telefonico de maximo 10 digitos.');
+      return false;
+    }
     if (!telefono) {
       setTelefonoError('Debe ingresar un número de teléfono.');
       return false;
@@ -183,7 +192,6 @@ const FormularioPasoAPaso = () => {
           const response = await postAgenda(data);
           console.log('Respuesta de la API:', response);
           
-          if (response && response.data && response.data.citaCreada) {
             // Mostrar SweetAlert con el mensaje de éxito
             Swal.fire({
                 title: 'Registro Exitoso',
@@ -196,12 +204,12 @@ const FormularioPasoAPaso = () => {
                     window.location.reload();
                 }
             });
-          } else {
+           if (response && response.data && response.data.citaCreada) {
             console.error('La respuesta de la API no contiene la información esperada:', response);
             // Mostrar SweetAlert con mensaje de error
             Swal.fire({
                 title: 'Error al Agendar',
-                text: 'No se pudo agendar la cita. Por favor, inténtalo de nuevo.',
+                text: 'No se pudo agendar la cita. Por favor intenta con otra opcion.',
                 icon: 'error',
                 confirmButtonText: 'Cerrar'
             });
@@ -237,6 +245,7 @@ const FormularioPasoAPaso = () => {
       setPasoActual(pasoActual - 1);
     }
   };
+  
 
   return (
     <div className="containerr">
@@ -269,6 +278,7 @@ const FormularioPasoAPaso = () => {
                     horaSeleccionada={horaSeleccionada}
                     handleSeleccionarHora={seleccionarHora}
                   />
+                   {horaError && <div className="invalid-feedback">{horaError}</div>}
                   <div className='pt-4'>
                     <p>Fecha seleccionada: {fecha}</p>
                     <p>Hora seleccionada: {horaSeleccionada}</p>

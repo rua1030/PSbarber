@@ -74,14 +74,14 @@ function Empleado() {
       <Nav/>
       <main id="main" className="main">
         <div className="">
-          <h1>Lista Empleados</h1>
+          <h1>Gestion de Empleados</h1>
           <nav>
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
                 <a href="/home">Home</a>
               </li>
               <li className="breadcrumb-item active">
-                <a href="/empleado">Listar Empleados</a>
+                <a href="/empleado">Gestion de Empleados</a>
               </li>
             </ol>
           </nav>
@@ -89,7 +89,7 @@ function Empleado() {
         <div className="container mt-5">
           <div className="card text-center">
             <div className="card-body">
-              <h5 className="card-title">Gestión de Empleados</h5>
+              <h5 className="card-title"></h5>
               <div className="d-flex justify-content-between">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   
@@ -121,6 +121,12 @@ function Empleado() {
                   columns={[
                     // ... (columnas anteriores)
                     {
+                      field: "documento",
+                      headerName: "Documento",
+                      flex: 0.4,
+                      headerClassName: "encabezado-negro",
+                    },
+                    {
                       field: "nombre",
                       headerName: "Nombre",
                       flex: 0.4 ,
@@ -131,18 +137,16 @@ function Empleado() {
                       headerName: "Apellidos",
                       flex: 0.4,
                       headerClassName: "encabezado-negro",
+                    },{
+                      field: "email",
+                      headerName: "Email",
+                      flex:1,
+                      headerClassName: "encabezado-negro",
                     },
                     {
                       field: "telefono",
                       headerName: "Telefono",
                       flex: 0.9,
-                      headerClassName: "encabezado-negro",
-                    },
-                    
-                    {
-                      field: "email",
-                      headerName: "Email",
-                      flex:1,
                       headerClassName: "encabezado-negro",
                     },
                     {
@@ -196,7 +200,6 @@ function Empleado() {
                                   borderRadius: '50%',
                                 }}
                                   onClick={() => handleOpenInfoModal(params.row)}
-                                  disabled={!params.row.estado}
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
                                   fill="gray" className="bi bi-info-circle-fill" viewBox="0 0 16 16">
