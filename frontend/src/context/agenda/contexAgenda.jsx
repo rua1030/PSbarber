@@ -20,15 +20,16 @@ export const useAgenda=()=>{
         const response = await getListarAgenda();
         const filterList = response.data.filter(
           (item) =>
-          item.id_agenda.toString().includes(searchTerm) ||
-          item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.correo.toString().includes(searchTerm) ||
-          item.telefono.toString().includes(searchTerm) ||
+          item.id_Agenda.toString().includes(searchTerm) ||
+          item.cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.cliente.apellidos.toString().includes(searchTerm) ||
+          item.cliente.telefono.toString().includes(searchTerm) ||
           item.fecha.toString().includes(searchTerm) ||
-          item.hora.toString().includes(searchTerm) ||
-          item.empleado.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+          item.hora.toString().includes(searchTerm)||
+          item.estado_Pago.toString().includes(searchTerm)
         );
           setListar(filterList);
+          console.log(response)
         }
 
     const filtrarDesactivados = listar.sort((a, b) => {
@@ -40,12 +41,13 @@ export const useAgenda=()=>{
         });
 
 
-        const desactivarAgenda = async (id_agenda) => {
+        
+        const desactivarAgenda = async (id_Agenda) => {
             try {
-              const response = await putDesactivarAgenda(id_agenda);
+              const response = await putDesactivarAgenda(id_Agenda);
               if (response.status === 200) {
                 const updatedList = listar.map((item) => {
-                  if (item.id_agenda === id_agenda) {
+                  if (item.id_Agenda === id_Agenda) {
                     return { ...item, estado: false };
                   }
                   return item;
@@ -57,12 +59,12 @@ export const useAgenda=()=>{
             }
           };
       
-          const activarAgenda = async (id_agenda) => {
+          const activarAgenda = async (id_Agenda) => {
             try {
-              const response = await putActivarAgenda(id_agenda);
+              const response = await putActivarAgenda(id_Agenda);
               if (response.status === 200) {
                 const updatedList = listar.map((item) => {
-                  if (item.id_agenda === id_agenda) {
+                  if (item.id_Agenda === id_Agenda) {
                     return { ...item, estado: true };
                   }
                   return item;
@@ -76,7 +78,6 @@ export const useAgenda=()=>{
 
 
 
-        
         return(
             <AgendaContext.Provider value={{listaAgenda,filtrarDesactivados,setSearchTerm,activarAgenda,desactivarAgenda,listar,setListar}}>
                 {children}

@@ -1,4 +1,4 @@
-import { useAgenda} from "../../context/Agenda/contexAgenda";
+import { useAgenda} from "../../context/agenda/contexAgenda";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Nav from "../../components/Nav"
@@ -23,6 +23,7 @@ function Agenda(){
   useEffect(() => {
     listaAgenda();
  // eslint-disable-next-line react-hooks/exhaustive-deps
+ 
  },[searchTerm]);
 
  const handleOpenModal = () => {
@@ -37,7 +38,6 @@ agregarAgenda(formData)
 // Cerrar modal create
 const handleCloseModal = () => {
 setOpenCreateModal(false);
-listaEmpleado()
 }; 
 
 
@@ -98,47 +98,49 @@ return(
               autoHeight
               rows={filtrarDesactivados.map((item) => ({
                 ...item,
-                id: item.id_agenda,
+                id: item.id_Agenda,
+                nombre: item.cliente.nombre
               }))}
               columns={[
-                { field: 'id_agenda', headerName: 'ID', flex: 0.4 ,headerClassName: "encabezado-negro", },
-                { field: 'nombre', headerName: 'Nombre', flex: 0.4,headerClassName: "encabezado-negro", },
-                { field: 'telefono', headerName: 'Telefono', flex: 0.4,headerClassName: "encabezado-negro", },
-                { field: 'fecha', headerName: 'Fecha', flex: 0.4,headerClassName: "encabezado-negro", },
+                { field: 'id_Agenda', headerName: 'ID', flex: 0.1 ,headerClassName: "encabezado-negro", },
+                { field: 'nombre', headerName: 'Nombre cliente', flex: 0.7,headerClassName: "encabezado-negro", },
+                { field: 'fecha', headerName: 'Fecha', flex: 0.6,headerClassName: "encabezado-negro", },
                 { field: 'hora', headerName: 'Hora', flex: 0.4, headerClassName: "encabezado-negro",},
                 {
-                    field: "estado",
-                    headerName: "Estado",
-                    flex: 0,
-                    headerClassName: "encabezado-negro",
-                    renderCell: (params) => ( 
-                      <Tooltip
-                        title={params.row.estado ? 'Inhabilitar' : 'Habilitar'}
-                        arrow
-                      >
-                      <div className="switch-button">
-                         <input
-                           type="checkbox"
-                            id={`switch-label-${params.row.id_agenda}`}
-                            checked={params.row.estado}
-                            onChange={(e) => {  
-                            e.preventDefault(); // Evitar la navegación por defecto
-                        if (params.row.estado) {
-                          desactivarAgenda(params.row.id_agenda);
-                      } else {
-                          activarAgenda(params.row.id_agenda);
-                    }
-                  }}
-                    className="switch-button__checkbox"
-                  />
-                      <label
-                        htmlFor={`switch-label-${params.row.id_agenda}`}
-                        className="switch-button__label"
-                      ></label>
-                      </div>
-                      </Tooltip>
-                    ),
-                  },
+                  field: "estado",
+                  headerName: "Estado",
+                  flex: 0,
+                  headerClassName: "encabezado-negro",
+                  renderCell: (params) => ( 
+                    <Tooltip
+                      title={params.row.estado ? 'Inhabilitar' : 'Habilitar'}
+                      arrow
+                    >
+                    <div className="switch-button">
+                       <input
+                         type="checkbox"
+                          id={`switch-label-${params.row.id_Agenda}`}
+                          checked={params.row.estado}
+                          onChange={(e) => {  
+                          e.preventDefault(); // Evitar la navegación por defecto
+                      if (params.row.estado) {
+                        desactivarAgenda(params.row.id_Agenda);
+                    } else {
+                        activarAgenda(params.row.id_Agenda);
+                  }
+                }}
+                  className="switch-button__checkbox"
+                />
+                    <label
+                      htmlFor={`switch-label-${params.row.id_Agenda}`}
+                      className="switch-button__label"></label>
+                    </div>
+                    </Tooltip>
+                  ),
+                },
+
+                { field: 'estado_Pago', headerName: 'Estado de Pago', flex: 0.5, headerClassName: "encabezado-negro",
+              },
                 {
                   field: "info",
                   headerName:"Info",

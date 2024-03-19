@@ -24,7 +24,6 @@ const opcionesTipoDocumento = [
 
 
 const ActualizarEmpleado = ({handleCloseModal2,empleadoId}) => {
-    
     const {Listar3,cargarTipo_Empleado,Listar,cargarRol,ListarActualizar,cargarDatosEmpleados,validacionActualizar}=useEmpleado()
     const params =useParams()
 
@@ -35,67 +34,76 @@ const ActualizarEmpleado = ({handleCloseModal2,empleadoId}) => {
         cargarRol()
         cargarTipo_Empleado()
         cargarDatosEmpleados(params.id_Empleado)
-    
+
       },[params.id_Empleado,empleadoId])
 
 
 
+      
+    //   const handleCancel = () => {
+    //     Swal.fire("Actualización cancelada", "Su archivo está seguro", "error");
+    //   };
 
-
-      const handleCancel = () => {
-        Swal.fire("Actualización cancelada", "Su archivo está seguro", "error");
-      };
-
-      const handleFormSubmit = async (values) => {
-        try {
-          const result = await Swal.fire({
-            title: "Confirmar actualización?",
-            text: "Tu registro será actualizado",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Aceptar",
-            cancelButtonText: "Cancelar",
-            buttons: true,
-          });
-          
-          if (result.isConfirmed) {
-            await actualizarEmpleado(empleadoId, values)
-              .then((response) => {
-                if (response.status === 200) {
-                  Swal.fire({
-                    icon: "success",
-                    title: "Actualización exitosa",
-                    text: "Su archivo ha sido actualizado.",
-                  });
-                  handleCloseModal2();
-                } else if (response.status === 400 && response.data.error) {
-                  Swal.fire({
-                    icon: "error",
-                    title: "Empleado ya registrado",
-                    text: response.data.error,
-                  });
-                } else {
-                  Swal.fire({
-                    icon: "error",
-                    title: "Error en la solicitud",
-                    text: "Error al actualizar el empleado.",
-                  });
-                }
-              })
-              .catch(() => {
-                Swal.fire({
-                  icon: "error",
-                  title: "Error en la solicitud",
-                  text: "Documento existente en la base de datos",
-                });
-              });
-          } else if (result.dismiss === Swal.DismissReason.cancel) {
-            handleCancel();
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      };
+    //   const handleFormSubmit = async (values) => {
+    //     try {
+    //         const result = await Swal.fire({
+    //             title: "Confirmar actualización?",
+    //             text: "Tu registro será actualizado",
+    //             icon: "warning",
+    //             showCancelButton: true,
+    //             confirmButtonText: "Aceptar",
+    //             cancelButtonText: "Cancelar",
+    //             buttons: true,
+    //         });
+    
+    //         if (result.isConfirmed) {
+    //             const response = await actualizarEmpleado(empleadoId, values);
+    
+    //             if (response.status === 200) {
+    //                 Swal.fire({
+    //                     icon: "success",
+    //                     title: "Actualización exitosa",
+    //                     text: "Su archivo ha sido actualizado.",
+    //                 });
+    //                 handleCloseModal2();
+    //             } else if (response.status === 400) {
+    //                 if (response.data && response.data.error) {
+    //                     if (response.data.error === 'El correo electrónico ya está registrado por otro empleado') {
+    //                         Swal.fire({
+    //                             icon: 'error',
+    //                             title: 'Error',
+    //                             text: 'El correo electrónico ya está registrado por otro empleado. Por favor, elige otro correo electrónico.',
+    //                         });
+    //                     } else {
+    //                         Swal.fire({
+    //                             icon: 'error',
+    //                             title: 'Error',
+    //                             text: response.data.error,
+    //                         });
+    //                     }
+    //                 } else {
+    //                     Swal.fire({
+    //                         icon: 'error',
+    //                         title: 'Error en la solicitud',
+    //                         text: 'Error al actualizar el empleado.',
+    //                     });
+    //                 }
+    //             } else {
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Error en la solicitud',
+    //                     text: 'Error al actualizar el empleado.',
+    //                 });
+    //             }
+    //         } else if (result.dismiss === Swal.DismissReason.cancel) {
+    //             handleCancel();
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
+    
+    
     
 
     return (
@@ -104,9 +112,98 @@ const ActualizarEmpleado = ({handleCloseModal2,empleadoId}) => {
             <Formik
                 initialValues={ListarActualizar}
                 enableReinitialize={true}
-                onSubmit={
-                    handleFormSubmit
-                }
+                onSubmit={async (values) => {
+                    try {
+                        if (!values.email.includes("@") || !values.email.includes(".com")) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Correo no valido',
+                                text: 'Por favor, ingresa un correo válido.',
+                            });
+                        } else {
+                            const swalWithBootstrapButtons = Swal.mixin({
+                                customClass: {
+                                    confirmButton: 'btn btn-success',
+                                    cancelButton: 'btn btn-danger'
+                                },
+                                buttonsStyling: false
+                            });
+                
+                            swalWithBootstrapButtons.fire({
+                                title: 'Confirmar el envío del formulario?',
+                                text: "",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Aceptar!',
+                                cancelButtonText: 'Cancelar!',
+                                buttons: true
+                            }).then(async (result) => {
+                                if (result.isConfirmed) {
+                                    try {
+                                        const response = await actualizarEmpleado(empleadoId, values);
+                
+                                        if (response.status === 200) {
+                                            swalWithBootstrapButtons.fire({
+                                                icon: 'success',
+                                                title: 'Actualización exitosa',
+                                                text: 'El archivo ha sido actualizado.',
+                                            });
+                                            handleCloseModal2();
+                                        } else if (response.status === 400) {
+                                            if (response.data && response.data.error) {
+                                                if (response.data.error === 'Documento ya existente en la base de datos') {
+                                                    swalWithBootstrapButtons.fire({
+                                                        icon: 'error',
+                                                        title: 'Error',
+                                                        text: 'El documento de empleado ya existe.',
+                                                    });
+                                                } else if (response.data.error === 'El correo electrónico ya está registrado por otro empleado') {
+                                                    swalWithBootstrapButtons.fire({
+                                                        icon: 'error',
+                                                        title: 'Error',
+                                                        text: 'El correo electrónico ya está registrado por otro empleado. Por favor, elige otro correo electrónico.',
+                                                    });
+                                                } else {
+                                                    swalWithBootstrapButtons.fire({
+                                                        icon: 'error',
+                                                        title: 'Error',
+                                                        text: response.data.error,
+                                                    });
+                                                }
+                                            } else {
+                                                swalWithBootstrapButtons.fire({
+                                                    icon: 'error',
+                                                    title: 'Error en la solicitud',
+                                                    text: 'Error al actualizar el empleado.',
+                                                });
+                                            }
+                                        } else {
+                                            swalWithBootstrapButtons.fire({
+                                                icon: 'error',
+                                                title: 'Error en la solicitud',
+                                                text: 'Error al actualizar el empleado.',
+                                            });
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                        swalWithBootstrapButtons.fire({
+                                            icon: 'error',
+                                            title: 'Error',
+                                            text: 'Ocurrió un error al actualizar el empleado. Revisa el correo y documento, puede que otro empleado lo tenga en uso.',
+                                        });
+                                    }
+                                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                    swalWithBootstrapButtons.fire({
+                                        icon: 'error',
+                                        title: 'Se canceló el envío',
+                                    });
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }}
 
 
                 validate={async (values) => {
@@ -245,20 +342,7 @@ const ActualizarEmpleado = ({handleCloseModal2,empleadoId}) => {
                                     <div className='invalid-feedback'>{errors.apellidos}</div>
                                 )}
                                 </div>
-                                <div className="mb-3">
-                                <label htmlFor="rol" className="form-label">
-                                    Rol del empleado
-                                </label>
-                                <select name="id_Rol" onChange={handleChange} value={values.id_Rol} className="form-control" label='Rol empleado'>
-                                    <option value="Seleccionar">Seleccionar</option>
-                                    {Listar.map((Listar) => (
-                                    <option key={Listar.id_Rol} value={Listar.id_Rol}>
-                                        {Listar.nombre}
-                                    </option>
-                                    ))}
-                                </select>
-                                {errors.tipo_documento && <div className="invalid-feedback">{errors.tipo_documento}</div>}
-                                </div>
+                                
                             </div>
 
                             <div className="col-md-6">
@@ -361,7 +445,9 @@ const ActualizarEmpleado = ({handleCloseModal2,empleadoId}) => {
                                     <div className='invalid-feedback'>{errors.telefono}</div>
                                 )}
                                 </div>
-                                <div className="mb-3">
+
+                            </div>
+                            <div className="mb-3">
                                 <Field
                                     type="text"
                                     name="email"
@@ -390,20 +476,9 @@ const ActualizarEmpleado = ({handleCloseModal2,empleadoId}) => {
                                 />
                                 {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                                 </div>  
-
-                            </div>
                             <div className="col-md-6">
                                 {/* Columna 2 */}
-                                <Field
-                                    type="password"
-                                    name="contrasena"
-                                    label='contraseña'
-                                    disabled={true}
-                                    onChange={handleChange}
-                                    value={values.contrasena}
-                                    as={TextField}  
-                                    style={{ width: '100%', height: '40px', marginBottom: '15px' }}
-                                />
+                                
                             </div>
                             <div className="col-md-12 d-flex justify-content-between">
                                 <button className="btn btn-dark" type="submit" disabled={!isValid}>

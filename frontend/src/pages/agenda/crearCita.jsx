@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import '../../css/LandingPage.css';
-import FormularioPasoAPaso from "../../components/checkout"
+import FormularioC from "../../components/formularioC"
+import CrearAgenda from "../../components/crearAgendacs"
 import Footer from '../../components/footer';
 
 
@@ -38,8 +39,16 @@ const LandingPage = () => {
         </div>
       </div>
       <div className="row pt-5">   
-        <div className='col-md-12'>      
-            <FormularioPasoAPaso/>
+      <h3>Agenda con nosotros</h3>
+      <p>¡Anímate a agendar con nosotros rápido!</p>
+        <div className='col-md-12'>  
+          
+            <CrearAgenda/>
+        </div>
+        <h3 className='pt-5'>Registrate  como cliente</h3>
+      <p>¡Registrate como cliente para solo una vez y rápido!</p> 
+        <div className='col-md-12'>  
+            <FormularioC/>
         </div>
       </div>
           

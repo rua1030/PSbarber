@@ -5,6 +5,10 @@ export const getListarEmpleado = async ()=>{
     return await axios.get('http://localhost:3001/empleado')
 }
 
+export const getListarEmpleadoauto = async ()=>{
+  return await axios.get('http://localhost:3001/empleado/auto')
+}
+
 export const postEmpleado = async (task) => {
     try {
       const response = await axios.post('http://localhost:3001/empleado/create', task);

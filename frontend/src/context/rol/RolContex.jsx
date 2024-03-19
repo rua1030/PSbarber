@@ -25,6 +25,7 @@ export const useRol=()=>{
         const rolesConPermisos = response.data.map((item) => ({
           id_Rol: item.id_rol,
           nombre: item.nombre_rol,
+          empleados: item.empleados,
           estado: item.estado_rol,
           permisos: item.permisos.split(','), // Convierte la cadena de permisos en un array
         }));

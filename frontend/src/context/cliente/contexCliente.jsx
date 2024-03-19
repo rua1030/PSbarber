@@ -21,7 +21,6 @@ export const ClienteContextProvider = ({ children }) => {
         const response = await getListarClientes();
         const filterList = response.data.filter(
           (item) =>
-          item.id_Cliente.toString().includes(searchTerm) ||
           item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
           item.apellidos.toLowerCase().includes(searchTerm.toLowerCase()) ||
           item.telefono.toString().includes(searchTerm) ||
@@ -141,7 +140,6 @@ export const ClienteContextProvider = ({ children }) => {
 
 
     const[ListarActualizar, setListarActualizar]=useState({
-      id_Cliente:"",
       nombres:"",
       apellidos:"",
       telefono:"",
@@ -151,12 +149,11 @@ export const ClienteContextProvider = ({ children }) => {
       estado:"",
    })
 
-  async function cargarDatosClientes(id_Cliente) {
+  async function cargarDatosClientes(documento) {
     try {
-      const response = await datosCliente(id_Cliente);
+      const response = await datosCliente(documento);
       const ClienteData = response.data;
       setListarActualizar({
-        id_Cliente: ClienteData.id_Cliente,
         nombres: ClienteData.nombres,
         apellidos: ClienteData.apellidos,
         telefono: ClienteData.telefono,
@@ -170,9 +167,11 @@ export const ClienteContextProvider = ({ children }) => {
     }
   }
  
-  async function validacionActualizar(id_Cliente) {
+  
+  async function validacionActualizar(documento) {
+    
     try {
-      const clienteUpdate = await datosCliente(id_Cliente);
+      const clienteUpdate = await datosCliente(documento);
       const response = clienteUpdate.data;
 
       setListarActualizar({
@@ -180,7 +179,6 @@ export const ClienteContextProvider = ({ children }) => {
         apellidos: response.apellidos,
         telefono: response.telefono,
         tipo_documento: response.tipo_documento,
-        documento: response.documento,
         email: response.email,
         estado: response.estado,
       });
@@ -189,7 +187,7 @@ export const ClienteContextProvider = ({ children }) => {
     }
   }
 
-  const destroyCliente = async (id_Cliente) => {
+  const destroyCliente = async (documento) => {
     try {
       Swal.fire({
         title: "Eliminar registro?",
@@ -202,7 +200,7 @@ export const ClienteContextProvider = ({ children }) => {
         cancelButtonText: "Cancelar",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const response = await deleteCliente(id_Cliente);
+          const response = await deleteCliente(documento);
           if (response.status === 200) {
             Swal.fire(
               "Eliminado!",
@@ -224,29 +222,35 @@ export const ClienteContextProvider = ({ children }) => {
     }
     };
 
-    const desactivarCliente = async (id_Cliente) => {
+    const desactivarCliente = async (documento) => {
+
       try {
-        const response = await putDesactivarCliente(id_Cliente);
+
+        const response = await putDesactivarCliente(documento);
+      
         if (response.status === 200) {
           const updatedList = listar.map((item) => {
-            if (item.id_Cliente === id_Cliente) {
+            if (item.documento === documento) {
               return { ...item, estado: false };
             }
             return item;
           });
           setListar(updatedList);
-        }
-      } catch (error) {
-        console.error(error);
+        }     
+      }catch (error) {
+       console.error(error);
       }
     };
 
-    const activarCliente = async (id_Cliente) => {
+    const activarCliente = async (documento) => {
+
       try {
-        const response = await putActivarCliente(id_Cliente);
+
+        const response = await putActivarCliente(documento);
+
         if (response.status === 200) {
           const updatedList = listar.map((item) => {
-            if (item.id_Cliente === id_Cliente) {
+            if (item.documento === documento) {
               return { ...item, estado: true };
             }
             return item;

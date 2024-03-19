@@ -15,14 +15,12 @@ const Empleado = sequelize.define('empleados', {
     documento: DataTypes.STRING,
     email: DataTypes.STRING,
     estado: DataTypes.BOOLEAN,
-    id_Rol: DataTypes.STRING,
-    id_Tipo_Empleado: DataTypes.STRING,
+    id_Tipo_Empleado: DataTypes.INTEGER,
     contrasena:DataTypes.STRING,
 },{
     timestamps: false // Desactiva las columnas createdAt y updatedAt
 });
 
-Empleado.belongsTo(Rol, { foreignKey: 'id_Rol' });
 Empleado.belongsTo(Tipo_empleado, { foreignKey: 'id_Tipo_Empleado' });
 
 module.exports = Empleado;

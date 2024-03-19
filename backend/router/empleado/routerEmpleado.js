@@ -2,6 +2,7 @@ const Router=require("express").Router()
 const empleadoController=require("../../controllers/Empleado/controllerEmpleado")
 
 Router.get("/", empleadoController.listarEmpleado)
+Router.get("/auto", empleadoController.listarEmpleadoautocomplete)
 Router.post("/create", empleadoController.crearEmpleado)
 Router.put("/update/:id_Empleado", empleadoController.actualizarEmpleado)
 Router.get("/:id", empleadoController.listarporid);

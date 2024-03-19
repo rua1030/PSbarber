@@ -115,7 +115,6 @@ function Empleado() {
                   rows={filtrarDesactivados.map((item) => ({
                     ...item,
                     id: item.id_Empleado,
-                    rol: item.rol.nombre,
                     tipo_empleado: item.tipo_empleado.nombre,
                   }))}
                   columns={[

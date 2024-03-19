@@ -24,9 +24,6 @@ const ClienteInfo = ({ Cliente, handleCloseModal, open }) => {
           <div>
             <h3>Info Cliente</h3>
             <p>
-              <strong>ID Cliente:</strong> {Cliente.id_Cliente}
-            </p>
-            <p>
               <strong>Nombre:</strong> {Cliente.nombre} {Cliente.apellidos}
             </p>
             <p>

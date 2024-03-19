@@ -11,10 +11,6 @@ async function listarEmpleado(req, res) {
     const EmpleadoContipoEm = await Empleado.findAll({
       include: [
         {
-          model: Rol,
-          attributes: ["nombre"],
-        },
-        {
           model: Tipo_empleado,
           attributes: ["nombre"],
         },
@@ -39,6 +35,17 @@ async function listarEmpleado(req, res) {
       .json({ error: "Hubo un error al obtener los empleados con roles" });
   }
 }
+
+async function listarEmpleadoautocomplete(req, res){
+
+  try {
+      const empleado = await Empleado.findAll();
+      res.json(empleado);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener los empleado' });
+    }
+  }
 
 async function crearEmpleado(req, res) {
   const dataEmpleado = req.body;
@@ -74,13 +81,20 @@ async function crearEmpleado(req, res) {
       documento: dataEmpleado.documento,
       email: dataEmpleado.email,
       estado: 1,
-      id_Rol: dataEmpleado.id_Rol,
       id_Tipo_Empleado: dataEmpleado.id_Tipo_Empleado,
       contrasena: hashedPassword,
     });
 
     const token = jwt.sign({ EmpleadoId: empleado.id_Empleado }, 'your-secret-key', {
       expiresIn: '1h'
+    });
+    
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'juandavidruaisaza@gmail.com',
+        pass: ''//cambiar esta parte del codigo a un doenv
+      }
     });
 
     res.status(201).json({ empleado, token });
@@ -89,6 +103,7 @@ async function crearEmpleado(req, res) {
     res.status(500).json({ error: "Error al crear nuevo empleado" });
   }
 }
+
 
 // actualizar empleado
 async function actualizarEmpleado(req, res) {
@@ -101,21 +116,33 @@ async function actualizarEmpleado(req, res) {
     documento,
     email,
     estado,
-    id_Rol,
     id_Tipo_Empleado,
     contrasena
   } = req.body;
 
   try {
-  const existingEmpleadoWithDocument = await Empleado.findOne({
-  where: {
-    documento,
-    id_Empleado: { [Op.ne]: id_Empleado }
-  }
+    // Verificar si el documento de Empleado ya existe
+    const existingEmpleadoWithDocument = await Empleado.findOne({
+      where: {
+        documento,
+        id_Empleado: { [Op.ne]: id_Empleado }
+      }
     });
 
     if (existingEmpleadoWithDocument) {
       return res.status(400).json({ error: 'Documento ya existente en la base de datos' });
+    }
+
+    // Verificar si el correo electrónico ya existe
+    const existingEmpleadoWithEmail = await Empleado.findOne({
+      where: {
+        email,
+        id_Empleado: { [Op.ne]: id_Empleado }
+      }
+    });
+
+    if (existingEmpleadoWithEmail) {
+      return res.status(400).json({ error: 'El correo electrónico ya está registrado por otro empleado' });
     }
 
     const empleadoToUpdate = await Empleado.findByPk(id_Empleado);
@@ -132,7 +159,6 @@ async function actualizarEmpleado(req, res) {
     empleadoToUpdate.documento = documento;
     empleadoToUpdate.email = email;
     empleadoToUpdate.estado = estado;
-    empleadoToUpdate.id_Rol = id_Rol;
     empleadoToUpdate.id_Tipo_Empleado = id_Tipo_Empleado;
     empleadoToUpdate.contrasena = contrasena;
 
@@ -145,6 +171,8 @@ async function actualizarEmpleado(req, res) {
     return res.status(500).send('Error al actualizar el Empleado');
   }
 }
+
+
 // fin de actualizar
 // traer informacion para actualizar
 async function listarporid(req, res){
@@ -198,10 +226,15 @@ async function activarEmpleado(req, res) {
 async function eliminarEmpleado(req, res) {
   try {
       const { id_Empleado } = req.params;
-      const empleado = await  Empleado.findByPk(id_Empleado);
+      const empleado = await Empleado.findByPk(id_Empleado);
 
       if (!empleado) {
           return res.status(404).json({ error: 'Empleado no encontrado' });
+      }
+
+      // Añadir lógica para verificar si el empleado se puede eliminar
+      if (empleado.noSePuedeEliminar) {
+          return res.status(400).json({ error: 'Este empleado no se puede eliminar.' });
       }
 
       // Elimina el empleado
@@ -264,13 +297,7 @@ async function enviarEmail(req, res) {
     const token = jwt.sign({ userId: empleado.id_Empleado }, 'tu_secreto', { expiresIn: '1h' });
 
     // Envía un correo electrónico informando sobre el cambio de contraseña
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'juandavidruaisaza@gmail.com',
-        pass: '1001249557Rua'//cambiar esta parte del codigo a un doenv
-      }
-    });
+    
 
     const mailOptions = {
       from: 'juandavidruaisaza@gmail.com',
@@ -307,10 +334,9 @@ async function enviarEmail(req, res) {
   }
 }
 
-
-
 module.exports = {
   listarEmpleado,
+  listarEmpleadoautocomplete,
   crearEmpleado,
   actualizarEmpleado,
   activarEmpleado,

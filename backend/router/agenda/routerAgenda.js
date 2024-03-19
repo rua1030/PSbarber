@@ -8,5 +8,6 @@ Router.get("/:id", agendaController.listarPorIdCita);
 Router.put("/disable/:id_Agenda", agendaController.desactivarCita)
 Router.put("/activate/:id_Agenda", agendaController.activarCita)
 Router.get('/obtenerHorasDisponibles/:fecha', agendaController.obtenerHorasDisponibles);
+Router.get('/obtenerDatosClientes/:documento', agendaController.obtenerInfoClientePorDocumento);
 
 module.exports=Router;

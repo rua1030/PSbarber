@@ -33,7 +33,6 @@ export const EmpleadoContextProvider = ({ children }) => {
         item.documento.toString().includes(searchTerm) ||
         item.email.toString().includes(searchTerm.toLowerCase()) ||
         item.estado.toString().includes(searchTerm.toLowerCase())||
-        item.rol.nombre .toLowerCase().includes(searchTerm.toLowerCase())||
         item.tipo_empleado.nombre.toLowerCase().includes(searchTerm.toLowerCase())
       );
         setListar(filterList);
@@ -193,26 +192,45 @@ export const EmpleadoContextProvider = ({ children }) => {
     }
     
     async function validacionActualizar(id_Empleado) {
-      try {
-        const empleadoUpdate = await datosEmpleado(id_Empleado);
-        const response = empleadoUpdate.data;
-  
-        setListarActualizar({
-          nombre: response.nombre,
-          apellidos: response.apellidos,
-          telefono: response.telefono,
-          tipo_documento: response.tipo_documento,
-          documento: response.documento,
-          email: response.email,
-          estado: response.estado,
-          id_Rol: response.id_Rol,
-          id_Tipo_Empleado: response.id_Tipo_Empleado,
-          contrasena: response.contrasena
-        });
-      } catch (error) {
-        console.log(error);
-  }
+  try {
+    const empleadoUpdate = await datosEmpleado(id_Empleado);
+    const response = empleadoUpdate.data;
+
+    setListarActualizar({
+      nombre: response.nombre,
+      apellidos: response.apellidos,
+      telefono: response.telefono,
+      tipo_documento: response.tipo_documento,
+      documento: response.documento,
+      email: response.email,
+      estado: response.estado,
+      id_Rol: response.id_Rol,
+      id_Tipo_Empleado: response.id_Tipo_Empleado,
+      contrasena: response.contrasena
+    });
+
+    // Verificar si el correo ya está registrado
+    const existingEmpleadoEmail = await Empleado.findOne({
+      where: { email: response.email, id_Empleado: { [Op.ne]: id_Empleado } },
+    });
+
+    if (existingEmpleadoEmail) {
+      // Mostrar alerta de correo ya registrado
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'El correo electrónico ya está registrado. Por favor, elige otro correo electrónico.',
+      });
+      return; // Puedes ajustar esto según lo que necesites hacer en tu aplicación
     }
+
+    // ... Resto de la lógica de validación o actualización
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+    
 
     const destroyEmpleado = async (id_Empleado) => {
     try {
@@ -228,6 +246,7 @@ export const EmpleadoContextProvider = ({ children }) => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           const response = await deleteEmpleado(id_Empleado);
+          console.log("este es el response ",response)
           if (response.status === 200) {
             Swal.fire(
               "Eliminado!",
@@ -235,7 +254,14 @@ export const EmpleadoContextProvider = ({ children }) => {
               "success"
             );
             listaEmpleado();
-          } else {
+          }else if(response.status === 500){
+            Swal.fire({
+              icon: "error",
+              title: "Error al eliminar el registro",
+              text: "No se pudo eliminar el registro",
+            });
+          }
+          else {
             Swal.fire({
               icon: "error",
               title: "Error al eliminar el registro",

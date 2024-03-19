@@ -42,9 +42,6 @@ const EmpleadoInfo = ({ Empleado, handleCloseModal, open }) => {
               <strong>Email:</strong> {Empleado.email}
             </p>
             <p>
-            <strong>rol: </strong>{Empleado.rol}
-            </p>
-            <p>
             <strong>tipo de empleado: </strong>{Empleado.tipo_empleado}
             </p>
           </div>

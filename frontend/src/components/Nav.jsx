@@ -19,8 +19,7 @@ const Nav = () => {
       }
     };
 
-    linkColor.forEach((l) => l.addEventListener('click', colorLink));
-
+   
     // Esta función se ejecutará cuando el componente se desmonte
     return () => {
       linkColor.forEach((l) => l.removeEventListener('click', colorLink));

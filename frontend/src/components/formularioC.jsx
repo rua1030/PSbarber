@@ -1,9 +1,9 @@
     /* eslint-disable react/prop-types */
 
-    import '../../css/pages.css'
+    import '../css/pages.css' 
     import { Field } from 'formik';
     import { Form, Formik } from 'formik';
-    import { postCliente } from '../../api/rutasApiCliente';
+    import { postCliente } from '../api/rutasApiCliente';
     import TextField from '@mui/material/TextField';
     import CheckIcon from '@mui/icons-material/Check';
     import ErrorIcon from '@mui/icons-material/Error';
@@ -22,10 +22,7 @@
         { value: 'CE', label: 'Cédula de Extranjería (C.E)' },
     ];
 
-    const CrearCliente  = ({handleCloseModal}) => {
-
-
-        
+    const FormularioC  = ({handleCloseModal}) => {
         useEffect(()=>{
 
         },[]);
@@ -196,7 +193,10 @@
                     }}
                 >
                     {({ handleChange, handleSubmit, values, errors, isValid }) => (
-                        <div className="modal-content" style={{ position: 'absolute', top: '0%', left: '0%', transform: 'translate(-50%, -50%)', width: '800px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px' }}>
+                         <div className="containerr">
+                         <div className="row pt-5 card">
+                           <div className="col-md-12">
+                            
                             <h5 className="card-title">Agregar Cliente</h5>
                             <Form onSubmit={handleSubmit} className="row g-3 needs-validation">
                                 <div className="col-md-6">
@@ -408,16 +408,15 @@
                                     <button className="btn btn-dark" type="submit" disabled={!isValid}>
                                         Agregar
                                     </button>
-                                    <button type="button" className="btn btn-danger" onClick={handleCloseModal}>
-                                        Cancelar
-                                    </button>
                                 </div>
 
                             </Form>
+                            </div>
+                         </div>
                         </div>
                     )}
                 </Formik>
             </>
         );
     }
-    export default CrearCliente;
+    export default FormularioC;

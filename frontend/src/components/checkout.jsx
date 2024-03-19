@@ -208,10 +208,10 @@ const FormularioPasoAPaso = () => {
             console.error('La respuesta de la API no contiene la información esperada:', response);
             // Mostrar SweetAlert con mensaje de error
             Swal.fire({
-                title: 'Error al Agendar',
-                text: 'No se pudo agendar la cita. Por favor intenta con otra opcion.',
-                icon: 'error',
-                confirmButtonText: 'Cerrar'
+              title: 'Error al Agendar',
+              text: 'No se pudo agendar la cita. Por favor intenta con otra opcion.',
+              icon: 'error',
+              confirmButtonText: 'Cerrar'
             });
           }
         } catch (error) {

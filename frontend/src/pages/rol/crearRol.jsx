@@ -7,9 +7,11 @@ import CheckIcon from '@mui/icons-material/Check';
 import ErrorIcon from '@mui/icons-material/Error';
 import Swal from 'sweetalert2';
 import Autocomplete from '@mui/material/Autocomplete';
+import { getListarEmpleadoauto } from '../../api/rutasApi'; 
 
 const CrearRol = ({ handleCloseModal }) => {
   const [permisosDisponibles, setPermisosDisponibles] = useState([]);
+  const [empleadosDisponibles, setEmpleadosDisponibles] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -25,6 +27,19 @@ const CrearRol = ({ handleCloseModal }) => {
     fetchPermisos();
   }, []);
 
+ useEffect(() => {
+  const fetchEmpleados = async () => {
+    try {
+      const response = await getListarEmpleadoauto();
+      setEmpleadosDisponibles(response.data);
+    } catch (error) {
+      console.error('Error al obtener empleados', error);
+    }
+  };
+
+  fetchEmpleados();
+}, []);
+
   return (
     <div className="modal-content" style={{ width: '600px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px' }}>
       <h5 className="card-title">Agregar nombre rol</h5>
@@ -32,6 +47,7 @@ const CrearRol = ({ handleCloseModal }) => {
         initialValues={{
           nombre: '',
           permisos: [],
+          empleado: '', // Cambiado de 'id_Empledo' a 'empleado'
         }}
         validate={(values) => {
           const errors = {};
@@ -137,6 +153,23 @@ const CrearRol = ({ handleCloseModal }) => {
                   <TextField {...params} label='Permisos' variant='outlined' />
                 )}
               />
+            </div>
+            <div className='col-md-12'>
+            <Autocomplete
+
+                id='empleados'
+                name="empleado" 
+                options={empleadosDisponibles}
+                getOptionLabel={(option) => option.nombre}
+                getOptionSelected={(option, value) => option.id_Empledo === value.id_Empledo}
+                value={values.empleado}
+                onChange={(_, newValue) => {
+                setFieldValue('empleado', newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label='Empleado' variant='outlined' />
+                )}
+            />
             </div>
 
             <div className="col-md-12 d-flex justify-content-between">

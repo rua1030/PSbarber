@@ -50,7 +50,7 @@
                         // Validaciones para el campo "nombre"
                         if (!values.nombre) {
                             errors.nombre = 'Este campo es requerido';
-                        } else if (!/^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(values.nombre)) {
+                        } else if (!/^[a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+)*$/.test(values.nombre)) {
                             errors.nombre = 'Este campo solo debe contener letras. Puede incluir un espacio entre las palabras.';
                         }
                     
@@ -186,11 +186,11 @@
                                         onChange={handleChange}
                                         value={values.nombre}
                                         as={TextField}
-                                        className={`${values.nombre && /^[a-zA-Z]+(?:[a-zA-Z]+)*$/.test(values.nombre) ? 'is-valid' : 'is-invalid'}`}
+                                        className={`${values.nombre && /^[a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+)*$/.test(values.nombre) ? 'is-valid' : 'is-invalid'}`}
                                         InputProps={{
                                             endAdornment: (
                                                 <React.Fragment>
-                                                    {values.nombre && /^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(values.nombre) ? (
+                                                    {values.nombre && /^[a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+)*$/        .test(values.nombre) ? (
                                                         <CheckIcon style={{ color: 'green' }} />
                                                     ) : (
                                                         <ErrorIcon style={{ color: 'red' }} />

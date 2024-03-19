@@ -45,8 +45,8 @@ function Cliente(){
 
   // modal de actualizar
 
-  const handleOpenModal2 = (id_Cliente) => {
-    setSelecClienteId(id_Cliente)
+  const handleOpenModal2 = (documento) => {
+    setSelecClienteId(documento)
     setOpenCreateModal2(true);
   };
 
@@ -110,11 +110,10 @@ return(
               autoHeight
               rows={filtrarDesactivados.map((item) => ({
                 ...item,
-                id: item.id_Cliente,
+                id: item.documento,
                 
               }))}
               columns={[
-                { field: 'id_Cliente', headerName: 'ID', flex: 0.4 ,headerClassName: "encabezado-negro", },
                 { field: 'tipo_documento', headerName: 'TD', flex: 0.4,headerClassName: "encabezado-negro", },
                 { field: 'documento', headerName: 'Documento', flex: 0.4,headerClassName: "encabezado-negro", },
                 { field: 'nombre', headerName: 'Nombre', flex: 0.4, headerClassName: "encabezado-negro",},
@@ -131,20 +130,20 @@ return(
                     <div className="switch-button">
                        <input
                          type="checkbox"
-                          id={`switch-label-${params.row.id_Cliente}`}
+                          id={`switch-label-${params.row.documento}`}
                           checked={params.row.estado}
                           onChange={(e) => {  
                           e.preventDefault(); // Evitar la navegación por defecto
                       if (params.row.estado) {
-                        desactivarCliente(params.row.id_Cliente);
+                        desactivarCliente(params.row.documento);
                     } else {
-                        activarCliente(params.row.id_Cliente);
+                        activarCliente(params.row.documento);
                   }
                 }}
                   className="switch-button__checkbox"
                 />
                     <label
-                      htmlFor={`switch-label-${params.row.id_Cliente}`}
+                      htmlFor={`switch-label-${params.row.documento}`}
                       className="switch-button__label"
                     ></label>
                     </div>
@@ -169,7 +168,6 @@ return(
                               borderRadius: '50%',
                             }}
                               onClick={() => handleOpenInfoModal(params.row)}
-                              disabled={!params.row.estado}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
                               fill="gray" className="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -188,10 +186,10 @@ return(
                       <span>
                         <button className="btn btn-outline-dark me-1"
                         onClick={() => {
-                        handleOpenModal2(params.row.id_Cliente);
+                        handleOpenModal2(params.row.documento);
                       }}
                       disabled={!params.row.estado}
-                      data-id={`edit-button-${params.row.id_Cliente}`}
+                      data-id={`edit-button-${params.row.documento}`}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -212,7 +210,7 @@ return(
                       </Tooltip>
                       <Tooltip title="Eliminar" arrow>
                       <button className="btn btn-outline-dark me-1"
-                      onClick={() => destroyCliente(params.row.id_Cliente)}
+                      onClick={() => destroyCliente(params.row.documento)}
                       disabled={!params.row.estado}
                       >
 
@@ -234,10 +232,10 @@ return(
               ]}
                     pageSize={5}
                     pageSizeOptions={[5, 25, 50, 100]}
-                      getRowClassName={(params) => {
-                        if (!params.row.estado) {
-                          return 'Cliente-desactivado';
-                        }
+                    getRowClassName={(params) => {
+                    if (!params.row.estado) {
+                        return 'Cliente-desactivado';
+                    }
                         return null
                       }}
             />

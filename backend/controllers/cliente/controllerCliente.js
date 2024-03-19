@@ -8,9 +8,10 @@ async function listarCliente(req, res){
         res.json(cliente);
       } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error al obtener roles' });
+        res.status(500).json({ error: 'Error al obtener clientes' });
       }
-    }
+}
+
 
 async function crearCliente(req, res) {
   const dataCliente = req.body;
@@ -28,7 +29,6 @@ async function crearCliente(req, res) {
     }
 
     const cliente = await Cliente.create({
-      id_Cliente: dataCliente.id_Cliente,
       nombre: dataCliente.nombre,
       apellidos: dataCliente.apellidos,
       telefono: dataCliente.telefono,
@@ -44,56 +44,50 @@ async function crearCliente(req, res) {
   }
 }
 
-// // actualizar cliente
 async function actualizarCliente(req, res) {
-  const { id_Cliente } = req.params;
+  const { documento } = req.params;
   const {
     nombre,
     apellidos,
     telefono,
     tipo_documento,
-    documento,
     email,
     estado,
   } = req.body;
 
   try {
-  const existingClienteWithDocument = await Cliente.findOne({
-  where: {
-    documento,
-    id_Cliente: { [Op.ne]: id_Cliente }
-  }
+    
+    // Buscar el cliente a actualizar
+    const clienteToUpdate = await Cliente.findOne({
+      where: {
+        documento,
+        documento: { [Op.ne]: null }
+      }
     });
-
-    if (existingClienteWithDocument) {
-      return res.status(400).json({ error: 'Documento ya existente en la base de datos' });
-    }
-
-    const clienteToUpdate = await Cliente.findByPk(id_Cliente);
-
+    
     if (!clienteToUpdate) {
-      return res.status(404).send('Cliente no encontrado');
+      return res.status(404).json({ error: 'Cliente no encontrado' });
     }
 
     // Actualizar los campos del cliente
-    clienteToUpdate.nombre = nombre;
-    clienteToUpdate.apellidos = apellidos;
-    clienteToUpdate.telefono = telefono;
-    clienteToUpdate.tipo_documento = tipo_documento;
-    clienteToUpdate.documento = documento;
-    clienteToUpdate.email = email;
-    clienteToUpdate.estado = estado;
-    
-    // Guardar los cambios en la base de datos
-    await clienteToUpdate.save();
+    await clienteToUpdate.update({
+      nombre,
+      apellidos,
+      telefono,
+      tipo_documento,
+      email,
+      estado,
+    });
 
     return res.status(200).json(clienteToUpdate);
   } catch (error) {
     console.error(error);
-    console.log("")
-    return res.status(500).send('Error al actualizar el cliente');
+    return res.status(500).json({ error: 'Error al actualizar el cliente' });
   }
 }
+
+
+
 // fin de actualizar
 
 // traer informacion para actualizar
@@ -114,14 +108,14 @@ async function listarporid(req, res){
 
 async function desactivarCliente(req, res) {
   try {
-      const { id_Cliente } = req.params;
-      const cliente = await Cliente.findByPk(id_Cliente);
+      const { documento } = req.params;
+      const cliente = await Cliente.findByPk(documento);
       if (!cliente) {
-          return res.status(404).json({ error: 'Cliente no encontrado' });
+          return res.status(404).json({ error: 'Cliente a desactivar no encontrado' });
       }
 
-      // Actualiza el estado del Cliente a "deshabilitado" (false)
-      await cliente.update({ estado: false });
+      // Actualiza el estado del cliente a "deshabilitado" (por ejemplo, 0 o 'inactivo')
+      await Cliente.update({ estado: false }, { where: { documento: documento } });
 
       res.status(200).json({ message: 'Cliente deshabilitado exitosamente' });
   } catch (error) {
@@ -130,38 +124,62 @@ async function desactivarCliente(req, res) {
   }
 }
 
+
+//  async function desactivarCliente(req, res) {
+//    try {
+
+//      const { documento } = req.params;
+//      const cliente = await Cliente.findByPk(documento);
+
+//     if (!cliente) {
+//       return res.status(404).json({ error: 'Cliente no  encontrado' });
+//     }
+
+//     // Actualiza el estado del Cliente a "deshabilitado" (false)
+//     await cliente.update({ estado: false });
+
+//     return res.status(200).json({ message: 'Cliente deshabilitado exitosamente' });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ error: 'Error al deshabilitar cliente' });
+//   }
+// }
+
 async function activarCliente(req, res) {
   try {
-      const { id_Cliente } = req.params;
-      const cliente = await Cliente.findByPk(id_Cliente);
+      const { documento } = req.params;
+      const cliente = await Cliente.findByPk(documento);
       if (!cliente) {
-          return res.status(404).json({ error: 'Cliente no encontrado' });
+          return res.status(404).json({ error: 'Cliente a desactivar no encontrado' });
       }
-      await cliente.update({ estado: true });
+
+      // Actualiza el estado del cliente a "deshabilitado" (por ejemplo, 0 o 'inactivo')
+      await Cliente.update({ estado: true }, { where: { documento: documento } });
 
       res.status(200).json({ message: 'Cliente habilitado exitosamente' });
   } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Error al habilitar cliente' });
+      res.status(500).json({ error: 'Error al deshabilitar cliente' });
   }
 }
 
+
 async function eliminarCliente(req, res) {
   try {
-      const { id_Cliente } = req.params;
-      const cliente = await  Cliente.findByPk(id_Cliente);
+    const { documento } = req.params;
+    const cliente = await Cliente.findByPk(documento);
 
-      if (!cliente) {
-          return res.status(404).json({ error: 'Cliente no encontrado' });
-      }
+    if (!cliente) {
+      return res.status(404).json({ error: 'Cliente no encontrado' });
+    }
 
     // Elimina el cliente
-      await cliente.destroy();
+    await cliente.destroy();
 
-      res.json({ message: 'Cliente eliminado exitosamente' });
+    res.json({ message: 'Cliente eliminado exitosamente' });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al eliminar cliente' });
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar cliente' });
   }
 }
 

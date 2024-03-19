@@ -97,9 +97,11 @@ const{crearRoles,cargarRol,searchTerm,setSearchTerm,filtrarDesactivados,desactiv
                                       id: item.id_Rol
                                     }))}
                                     columns={[
-                                        { field: 'id_Rol', headerName: 'ID', flex: 0,headerClassName: "encabezado-negro" },
-                                        { field: 'nombre', headerName: 'Nombre', flex:0.3,headerClassName: "encabezado-negro" },
-                                        { field: "estado",headerName: "Estado",flex: 0,headerClassName: "encabezado-negro",
+                                        {field: 'id_Rol', headerName: 'ID', flex: 0.1,headerClassName: "encabezado-negro" },
+                                        {field: 'nombre', headerName: 'Nombre', flex:0.4,headerClassName: "encabezado-negro" },
+                                        {field: 'permisos', headerName: 'Permisos', flex: 1,headerClassName: "encabezado-negro"},
+                                        {field: 'empleados', headerName: 'Empleados', flex: 1,headerClassName: "encabezado-negro"},
+                                        {field: "estado",headerName: "Estado",flex: 0.2,headerClassName: "encabezado-negro",
                                             
                                         renderCell: (params) => ( 
                                               <Tooltip
@@ -123,14 +125,22 @@ const{crearRoles,cargarRol,searchTerm,setSearchTerm,filtrarDesactivados,desactiv
                                           />
                                               <label
                                                 htmlFor={`switch-label-${params.row.id_Rol}`}
-                                                className="switch-button__label"
-                                              ></label>
+                                                className="switch-button__label"></label>
                                               </div>
                                               </Tooltip>
                                             ),
                                           },
                                         { field: 'Actualizar', headerName: 'Actualizar', flex: 0,headerClassName: "encabezado-negro",
-                                          
+                                        //   {params.row.nombre==="Administrador" ? (
+
+
+                                        //   ):(
+
+
+                                        //   )
+                                        
+                                        
+                                        // }
                                             renderCell: (params) => (
                                             <div>
                                                <Tooltip title="Actualizar" arrow>
@@ -165,10 +175,7 @@ const{crearRoles,cargarRol,searchTerm,setSearchTerm,filtrarDesactivados,desactiv
 
 
                                         },
-                                        {field: 'permisos', headerName: 'Permisos', flex: 1,headerClassName: "encabezado-negro",
                                         
-                                    
-                                        }
                                     ]}
                                     
                                     pageSize={5}

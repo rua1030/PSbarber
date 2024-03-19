@@ -1,3 +1,5 @@
+
+
 import '../../css/pages.css'
 import { Field } from 'formik';
 import { Form, Formik } from 'formik';
@@ -9,7 +11,7 @@ import React from 'react';
 import Swal from 'sweetalert2';
 import { useEffect } from 'react'
 import { useEmpleado } from '../../context/empleado/empleadoContex';
-import Autocomplete from '@mui/material/Autocomplete';
+
 
 
 
@@ -19,6 +21,12 @@ const opcionesDocumento = [
     { value: 'CC', label: 'Cédula de Ciudadanía (C.C)' },
     { value: 'CE', label: 'Cédula de Extranjería (C.E)' },
 ];
+
+const opcionesEmpleados = [
+    { value: '1', label: 'Barbero' },
+    { value: '2', label: 'Servicio' },
+    { value: '3', label: 'Administrador' },
+];  
 
 // eslint-disable-next-line react/prop-types
 const CrearEmpleado = ({ handleCloseModal }) => {
@@ -33,27 +41,23 @@ const CrearEmpleado = ({ handleCloseModal }) => {
 
     return (
         <>
-
             <Formik
 
                 initialValues={{
-                    tipo_documento: '',
-                    documento: '',
-                    nombre: '',
-                    apellidos: '',
-                    telefono: '',
-                    id_Tipo_Empleado: '',
-                    email: '',
-                    id_Rol: 1, //por arreglar
+
+                    tipo_documento:'',
+                    documento:'',
+                    nombre:'',
+                    apellidos:'',
+                    telefono:'',
+                    id_Tipo_Empleado:'',
+                    email:'',
                 }}
 
                 validate={async (values) => {
                     const errors = {};
 
-                    // Validaciones para el campo "tipoEmpleado"
-                    if (!values.id_Rol) {
-                        errors.id_Rol = 'Este campo es requerido';
-                    }
+                    // Validaciones para el campo "tipoEmpleado
                     if (!values.id_Tipo_Empleado) {
                         errors.id_Tipo_Empleado = 'Este campo es requerido';
                     }
@@ -64,20 +68,22 @@ const CrearEmpleado = ({ handleCloseModal }) => {
                     }
 
                     // Validaciones para el campo "nombre"
-                    if (!values.nombre) {
-                        errors.nombre = 'Este campo es requerido';
-                    } else if (!/^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(values.nombre)) {
-                        errors.nombre = 'Este campo solo debe contener letras. Puede incluir un espacio entre nombres y apellidos.';
-                    }
+                   // Validaciones para el campo "nombre"
+                        if (!values.nombre) {
+                            errors.nombre = 'Este campo es requerido';
+                        } else if (!/^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-ZñÑáéíóúÁÉÍÓÚ]+)*$/.test(values.nombre)) {
+                            errors.nombre = 'Este campo solo debe contener letras. Puede incluir un espacio entre nombres y apellidos.';
+                        }
 
-                    // Validaciones para el campo "apellidos"
-                    if (!values.apellidos) {
-                        errors.apellidos = 'Este campo es requerido';
-                    } else if (!/^[a-zA-Z]+(?: [a-zA-Z]+)?$/.test(values.apellidos)) {
-                        errors.apellidos = 'Este campo solo debe contener letras. Puede incluir un espacio entre nombres y apellidos.';
-                    }
+                        // Validaciones para el campo "apellidos"
+                        if (!values.apellidos) {
+                            errors.apellidos = 'Este campo es requerido';
+                        } else if (!/^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-ZñÑáéíóúÁÉÍÓÚ]+)?$/.test(values.apellidos)) {
+                            errors.apellidos = 'Este campo solo debe contener letras. Puede incluir un espacio entre nombres y apellidos.';
+                        }
 
-                    // Validaciones para el campo "documento"
+
+                    //Validaciones para el campo "documento"
                     if (!values.documento) {
                         errors.documento = 'Este campo es requerido';
                     } else if (!/^[0-9]+$/.test(values.documento) || values.documento.length < 7 || values.documento.length > 10) {
@@ -231,16 +237,24 @@ const CrearEmpleado = ({ handleCloseModal }) => {
                                     <label htmlFor="tipoEmpleado" className="form-label">
                                         Tipo de empleado
                                     </label>
-                                    <select name="id_Tipo_Empleado" onChange={handleChange} value={values.id_Tipo_Empleado} className="form-control" label='tipo empleado'>
-                                        <option value="Seleccionar ">Seleccionar </option>
-                                        {Listar3.map((Listar3) => (
-                                            <option key={Listar3.id_Tipo_Empleado} value={Listar3.id_Tipo_Empleado}>
-                                                {Listar3.nombre}
+                                    <select
+                                        className={`form-select ${errors.id_Tipo_Empleado ? 'is-invalid' : values.id_Tipo_Empleado ? 'is-valid' : ''}`}
+                                        name="id_Tipo_Empleado"
+                                        value={values.id_Tipo_Empleado}
+                                        onChange={handleChange}
+                                        aria-describedby="tipoDocumentoFeedback"
+                                    >
+                                        <option value="">Seleccionar</option>
+                                        {opcionesEmpleados.map(opcion => (
+                                            <option key={opcion.value} value={opcion.value}>
+                                                {opcion.label}
                                             </option>
                                         ))}
                                     </select>
                                     {errors.id_Tipo_Empleado && (
-                                        <div className='invalid-feedback'>{errors.id_Tipo_Empleado}</div>
+                                        <div id="tipoDocumentoFeedback" className="invalid-feedback">
+                                            {errors.id_Tipo_Empleado}
+                                        </div>
                                     )}
                                 </div>
 
@@ -252,11 +266,11 @@ const CrearEmpleado = ({ handleCloseModal }) => {
                                         onChange={handleChange}
                                         value={values.nombre}
                                         as={TextField}
-                                        className={`${values.nombre && /^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(values.nombre) ? 'is-valid' : 'is-invalid'}`}
+                                        className={`${values.nombre && /^[a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+)*$/.test(values.nombre) ? 'is-valid' : 'is-invalid'}`}
                                         InputProps={{
                                             endAdornment: (
                                                 <React.Fragment>
-                                                    {values.nombre && /^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(values.nombre) ? (
+                                                    {values.nombre && /^[a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+)*$/.test(values.nombre) ? (
                                                         <CheckIcon style={{ color: 'green' }} />
                                                     ) : (
                                                         <ErrorIcon style={{ color: 'red' }} />
@@ -278,7 +292,7 @@ const CrearEmpleado = ({ handleCloseModal }) => {
                                         type="text"
                                         name="apellidos"
                                         label='Apellidos'
-                                        className={`${values.apellidos && /^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(values.apellidos) ? 'is-valid' : 'is-invalid'}`}
+                                        className={`${values.apellidos && /^[a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+)*$/.test(values.apellidos) ? 'is-valid' : 'is-invalid'}`}
                                         id="apellidos"
                                         required
                                         as={TextField}
@@ -287,7 +301,7 @@ const CrearEmpleado = ({ handleCloseModal }) => {
                                         InputProps={{
                                             endAdornment: (
                                                 <React.Fragment>
-                                                    {values.apellidos && /^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(values.apellidos) ? (
+                                                    {values.apellidos && /^[a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-Z-ñÑáéíóúÁÉÍÓÚ]+)*$/.test(values.apellidos) ? (
                                                         <CheckIcon style={{ color: 'green' }} />
                                                     ) : (
                                                         <ErrorIcon style={{ color: 'red' }} />
@@ -302,58 +316,37 @@ const CrearEmpleado = ({ handleCloseModal }) => {
                                     )}
                                 </div>
                                 <div className="mb-3">
-                                    <Field
-                                        type="text"
-                                        name="contrasena"
-                                        label='Contraseña'
-                                        onChange={handleChange}
-                                        value={values.contrasena}
-                                        as={TextField}
-                                        className={`${values.contrasena && /(?=.*[A-Z])+(?=.*[a-z])+(?=.*\d)/.test(values.contrasena) ? 'is-valid' : 'is-invalid'}`}
-                                        InputProps={{
-                                            endAdornment: (
-                                                <React.Fragment>
-                                                    {values.contrasena && /(?=.*[A-Z])+(?=.*[a-z])+(?=.*\d)/.test(values.contrasena) ? (
+                                <Field
+                                    type={values.showPassword ? 'text' : 'password'}
+                                    name="contrasena"
+                                    label='Contraseña'
+                                    onChange={handleChange}
+                                    value={values.contrasena}
+                                    as={TextField}
+                                    className={`${values.contrasena && /(?=.*[A-Z-ñ])+(?=.*[a-z])+(?=.*\d)/.test(values.contrasena) ? 'is-valid' : 'is-invalid'}`}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <React.Fragment>
+                                                {values.contrasena ? (
+                                                    /(?=.*[A-Z-ñ])+(?=.*[a-z])+(?=.*\d).{8,15}/.test(values.contrasena) && values.contrasena.length >= 8 && values.contrasena.length <= 15 ? (
                                                         <CheckIcon style={{ color: 'green' }} />
                                                     ) : (
                                                         <ErrorIcon style={{ color: 'red' }} />
-                                                    )}
-                                                </React.Fragment>
-                                            ),
-                                        }}
+                                                    )
+                                                ) : (
+                                                    <ErrorIcon style={{ color: 'red' }} />
+                                                )}
+                                            </React.Fragment>
+                                        ),
+                                    }}
+                                    required
+                                    style={{ width: '100%', height: '100%', marginBottom: '15px' }}
+                                />
+                                {errors.contrasena && (
+                                    <div className='invalid-feedback'>{errors.contrasena}</div>
+                                )}
+                            </div>
 
-
-                                        required
-                                        style={{ width: '100%', height: '100%', marginBottom: '15px' }}
-                                    />
-                                    {errors.contrasena && (
-                                        <div className='invalid-feedback'>{errors.contrasena}</div>
-                                    )}
-
-                                </div>
-                                <div className="mb-3">
-                                    <Autocomplete
-                                        name="id_Rol"
-                                        options={Listar.filter((rol) => rol.estado)}
-                                        getOptionLabel={(option) => option.nombre}
-                                        onChange={(event, newValue) => {
-                                            handleChange({
-                                                target: {
-                                                    name: 'id_Rol',
-                                                    value: newValue ? newValue.id_Rol : '', // Aquí asumimos que la opción tiene una propiedad id_Rol
-                                                },
-                                            });
-                                        }}
-                                        value={Listar.find((option) => option.id_Rol === values.id_Rol) || null}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Rol empleado"
-                                            />
-                                        )}
-                                    />
-                                    {errors.tipo_docum && <div className="invalid-feedback">{errors.tipo_documento}</div>}
-                                </div>
                             </div>
 
                             <div className="col-md-6">
