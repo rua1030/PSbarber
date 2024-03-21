@@ -13,7 +13,7 @@ import iconpay from "../../../public/img/check_payment_pay_icon_143297.svg"
 
 function Agenda(){
 
-  const {activarAgenda,desactivarAgenda,listaAgenda,searchTerm,setSearchTerm,filtrarDesactivados } =useAgenda()
+  const {activarAgenda,desactivarAgenda,listaAgenda,searchTerm,setSearchTerm,filtrarDesactivados, desactivarProcesoPago, activarProcesoPago} =useAgenda()
 
 
   const [selectedAgenda, setSelectedAgenda] = useState(null);
@@ -139,8 +139,38 @@ return(
                   ),
                 },
 
-                { field: 'estado_Pago', headerName: 'Estado de Pago', flex: 0.5, headerClassName: "encabezado-negro",
-              },
+                {
+                  field: 'estado_Pago',
+                  headerName: 'Estado de Pago',
+                  flex: 0.5,
+                  headerClassName: "encabezado-negro",
+                  renderCell: (params) => ( 
+                    <Tooltip
+                      title={params.row.estado_Pago ? 'En proceso' : 'Finalizado'}
+                      arrow
+                    >
+                    <div className="switch-button2">
+                       <input
+                         type="checkbox"
+                          id={`switch-label-2${params.row.id_Agenda}`}
+                          checked={params.row.estado_Pago}
+                          onChange={(e) => {  
+                          e.preventDefault(); // Evitar la navegación por defecto
+                      if (params.row.estado_Pago) {
+                        desactivarProcesoPago(params.row.id_Agenda);
+                    } else {
+                        activarProcesoPago(params.row.id_Agenda);
+                  }
+                }}
+                  className="switch-button__checkbox2"
+                />
+                    <label
+                      htmlFor={`switch-label-2${params.row.id_Agenda}`}
+                      className="switch-button__label2"></label>
+                    </div>
+                    </Tooltip>
+                  ),
+                },
                 {
                   field: "info",
                   headerName:"Info",
@@ -165,32 +195,6 @@ return(
                               fill="gray" className="bi bi-info-circle-fill" viewBox="0 0 16 16">
                               <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                             </svg>
-                          </button>
-                          </span>
-                        </Tooltip>
-                    </div>
-                  )
-                },{
-                  field: "pagar",
-                  headerName:"pagar",
-                  flex:1,
-                  headerClassName:"encabezado-negro",
-                  renderCell: (params)=>(
-                    <div>
-                      <Tooltip title="Información" arrow>
-                          <span>
-                          <button
-                            className="btn btn-outline-dark me-1"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              padding: '0.9px',
-                              borderRadius: '50%',
-                            }}
-                              onClick={() => handleOpenInfoModal(params.row)}
-                              disabled={!params.row.estado}
-                          >
-                          <img src={iconpay}/>
                           </button>
                           </span>
                         </Tooltip>

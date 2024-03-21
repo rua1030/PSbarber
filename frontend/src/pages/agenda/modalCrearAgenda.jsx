@@ -63,6 +63,7 @@ const ModalCrearAgenda = ({ handleCloseModal }) => {
           hora:'',
           id_empleado:52,
           documento:'',
+          estado_pago:1,
           servicios: [],
         }}
         validate={(values) => {

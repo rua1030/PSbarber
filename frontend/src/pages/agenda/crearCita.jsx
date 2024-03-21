@@ -25,7 +25,7 @@ const LandingPage = () => {
       {/* Carrusel */}
       <div className='row pt-5'>
         <div className="col-md-8">
-          <div>
+          <div> 
             <img src={image1} alt="Image 1" className="carousel-image carousel-image1" />
           </div>
           <div className="row pt-5">
@@ -123,8 +123,6 @@ const LandingPage = () => {
         </div>
       </header>
       <Footer/>
-
-      
     </div>
   );
 };

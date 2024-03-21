@@ -65,12 +65,51 @@ Breadcrumbs
   .switch-button__checkbox:checked + .switch-button__label:before {
     transform: translateX(2rem);
   }
+
+  .switch-button2 {
+    display: inline-block;
+  }
+  
+  .switch-button__checkbox2 {
+    display: none;
+  }
+  
+  .switch-button__label2 {
+    background-color: var(--color-naranja);
+    width: 3rem;
+    height: 1.5rem;
+    border-radius: 1rem;
+    display: inline-block;
+    position: relative;
+  }
+  
+  .switch-button__label2:before {
+    transition: 0.2s;
+    display: block;
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: var(--color-button);
+    content: '';
+    border-radius: 50%;
+    box-shadow: inset 0px 0px 0px 1px var(--color-black);
+  }
+  
+  /* Corrige el selector y elimina los espacios entre los selectores y los combina. */
+  .switch-button__checkbox2:checked + .switch-button__label2 {
+    background-color: var(--color-azul);
+  }
+  
+  /* Corrige el selector y elimina los espacios entre los selectores y los combina. */
+  .switch-button__checkbox2:checked + .switch-button__label2:before {
+    transform: translateX(2rem);
+  }
   
   :root {
     --color-green: #00a878;
     --color-red: red;
     --color-button: #fdffff;
     --color-black: #000;
+    --color-azul: rgba(0, 0, 255, 0.349);
+    --color-naranja: rgba(255, 166, 0, 0.932);
   }
-  
-  

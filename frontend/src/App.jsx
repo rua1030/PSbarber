@@ -19,6 +19,8 @@ import Servicio from "./pages/servicio/servicio"
 import Landingpage from "./pages/agenda/crearCita"
 import Agenda from "./pages/agenda/Agenda"
 import Dashboard from "./pages/dashboard/dashboard"
+import Cheque from "./pages/agenda/chaque"
+
 
 function App() {
 
@@ -35,6 +37,7 @@ function App() {
 
     <Routes>
       <Route path="/agenda" element={<Agenda/>}/>   
+      <Route path="/agenda/cheque" element={<Cheque/>}/>   
       <Route path="/servicio" element={<Servicio/>}/>
       {/* <Route path="/servicio/create" element={<CrearServicio/>}/>
       <Route   path="/servicio/update" element={<ActualizarServicio/>}/> */}

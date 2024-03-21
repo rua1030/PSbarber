@@ -10,6 +10,8 @@ import HorarioCarousel from '../../src/components/HorarioCarousel';
 
 const CrearAgenda = ({ handleCloseModal }) => {
 
+
+
   const [servicios, setServicios] = useState([]);
   const [fecha, setFecha] = useState('');
   const [horaSeleccionada, setHoraSeleccionada] = useState('');
@@ -27,7 +29,7 @@ const CrearAgenda = ({ handleCloseModal }) => {
       } catch (error) {
         console.error('Error al obtener servicios', error);
       }
-    };
+    };  
 
     fetchServicios();
   }, []);
@@ -50,6 +52,7 @@ const CrearAgenda = ({ handleCloseModal }) => {
   const generarHorasDisponibles = () => {
     return horasDisponibles;
   };
+
 
   return (
     <div className="formulario-contenedor"> {/* Contenedor del formulario */}
@@ -120,10 +123,9 @@ const CrearAgenda = ({ handleCloseModal }) => {
                 };
   
                 const response = await postAgenda(data);
-                window.location.reload();
                 console.log("esta es la respuesta", response);
                 console.log("este es el data", data)
-  
+                
                 if (response.data && response.data.error) {
                   if (response.data.error === 'Cliente no encontrado. Debe registrarse primero.') {
                     Swal.fire({
@@ -150,15 +152,14 @@ const CrearAgenda = ({ handleCloseModal }) => {
                       'Registro Enviado!',
                     ).then(() => {
                       handleCloseModal();
-                      window.location.reload(); // Recargar la página después de cerrar el modal
+                        
                     });
                   } else {
                     swalWithBootstrapButtons.fire(
                       'Registro Enviado!',
                     ).then(() => {
-                      handleCloseModal();
-                      // Recargar la página después de cerrar el modal
-                      window.location.reload();
+                        
+                        handleCloseModal();
                     });
                   }
                 }
@@ -209,6 +210,28 @@ const CrearAgenda = ({ handleCloseModal }) => {
                           style={{ width: '100%', height: '40px', marginBottom: '15px' }}
                         />
                       </div>
+                      
+                      <div className="mb-3">
+
+                      <HorarioCarousel
+                        horasDisponibles={generarHorasDisponibles()}
+                        horaSeleccionada={horaSeleccionada}
+                        handleSeleccionarHora={(hora) => {
+                          setHoraSeleccionada(hora);
+                          handleChange({
+                            target: {
+                              name: 'hora',
+                              value: hora,
+                            },
+                          });
+                          console.log('Hora seleccionadaaaaa:', hora);
+                        }}
+                      />
+                    </div>
+                    {errors.hora && (
+                      <div className='invalid-feedback'>{errors.hora}</div>
+                    )}
+                    <p>Hora seleccionada: {horaSeleccionada}</p>
                     </div>
                   </div>
 
@@ -258,26 +281,7 @@ const CrearAgenda = ({ handleCloseModal }) => {
                       />
                       {errors.fecha && <div className='invalid-feedback'>{errors.fecha}</div>}
                     </div>
-                    <div className="mb-3">
-                      <HorarioCarousel
-                        horasDisponibles={generarHorasDisponibles()}
-                        horaSeleccionada={horaSeleccionada}
-                        handleSeleccionarHora={(hora) => {
-                          setHoraSeleccionada(hora);
-                          handleChange({
-                            target: {
-                              name: 'hora',
-                              value: hora,
-                            },
-                          });
-                          console.log('Hora seleccionadaaaaa:', hora);
-                        }}
-                      />
-                    </div>
-                    {errors.hora && (
-                      <div className='invalid-feedback'>{errors.hora}</div>
-                    )}
-                    <p>Hora seleccionada: {horaSeleccionada}</p>
+                    
                   </div>
                   <div className="col-md-6">
                   </div>
@@ -291,9 +295,12 @@ const CrearAgenda = ({ handleCloseModal }) => {
             </div>
           </div>
         )}
-      </Formik>
+      </Formik>                                     
+
     </div>
+    
   );
+  
 };
 
 export default CrearAgenda;

@@ -1,9 +1,23 @@
 const Agenda = require("../../models/agenda/modelAgenda");
 const Empleado = require("../../models/empleado/modelEmpleado")
 const Cliente = require("../../models/clientes/modelClientes")
+const Servicio = require("../../models/servicio/modelServicio")
+const Detalle_servicio = require("../../models/agenda/modelDetalleServicio")
 const DetalleServicio = require("../../models/agenda/modelDetalleServicio")
 const sequelize=require("../../database/db");
 const { Op, and } = require("sequelize");
+
+
+// async function listarDetalle(req,res){
+//   try{
+//     const CitaId = req.params.id;
+//     const detalle_servicio = await  DetalleServicio.findByPk(CitaId);
+    
+    
+    
+    
+//   }
+// }
 
 async function listarCitas(req, res) {
   try {
@@ -31,88 +45,88 @@ async function listarCitas(req, res) {
 }
 
 
+async function createCita(req, res) {
+  const dataCita = req.body;
+  const t = await sequelize.transaction();
 
-      async function createCita(req, res) {
-        const dataCita = req.body;
-        const t = await sequelize.transaction();
+  try {
+      // Verificar si el cliente con el documento existe
+      const existingCliente = await Cliente.findOne({
+          where: {
+              documento: dataCita.documento
+          },
+      });
 
-        try {
-            // Verificar si el cliente con el documento existe
-            const existingCliente = await Cliente.findOne({
-                where: {
-                    documento: dataCita.documento
-                },
-            });
+      if (!existingCliente) {
+          return res.status(404).json({ error: "Cliente no encontrado. Debe registrarse primero." });
+      }
 
-            if (!existingCliente) {
-                return res.status(404).json({ error: "Cliente no encontrado. Debe registrarse primero." });
-            }
+      // Verificar si el empleado con el ID existe
+      const existingEmpleado = await Empleado.findByPk(dataCita.id_Empleado);
 
-            // Verificar si el empleado con el ID existe
-            const existingEmpleado = await Empleado.findByPk(dataCita.id_Empleado);
+      if (!existingEmpleado) {
+          return res.status(404).json({ error: "Empleado no encontrado. Proporcione un ID de Empleado válido." });
+      }
 
-            if (!existingEmpleado) {
-                return res.status(404).json({ error: "Empleado no encontrado. Proporcione un ID de Empleado válido." });
-            }
+      // Verificar si la fecha de la cita ya existe
+      const existingCitaFecha = await Agenda.findOne({
+          where: {
+              fecha: dataCita.fecha
+          },
+      });
 
-            // Verificar si la fecha de la cita ya existe
-            const existingCitaFecha = await Agenda.findOne({
-                where: {
-                    fecha: dataCita.fecha
-                },
-            });
+      // Verificar si la hora de la cita ya existe
+      const existingCitaHora = await Agenda.findOne({
+          where: {
+              hora: dataCita.hora
+          },
+      });
 
-            // Verificar si la hora de la cita ya existe
-            const existingCitaHora = await Agenda.findOne({
-                where: {
-                    hora: dataCita.hora
-                },
-            });
+      if (existingCitaFecha && existingCitaHora) {
+          return res.status(400).json({ error: "Esta fecha y hora no está disponible" });
+      }
 
-            if (existingCitaFecha && existingCitaHora) {
-                return res.status(400).json({ error: "Esta fecha y hora no está disponible" });
-            }
+      // Crear la cita
+      const cita = await Agenda.create({
+          fecha: dataCita.fecha,
+          hora: dataCita.hora,
+          id_Empleado: dataCita.id_Empleado,
+          documento: dataCita.documento,
+          estado: 1,
+          estado_Pago:1,
+      }, { transaction: t });
 
-            // Crear la cita
-            const cita = await Agenda.create({
-                fecha: dataCita.fecha,
-                hora: dataCita.hora,
-                id_Empleado: dataCita.id_Empleado,
-                documento: dataCita.documento,
-                estado: 1,
-                estado_pago:1,
-            }, { transaction: t });
+      // Verificar y crear los detalles de servicio
+      if (dataCita.servicios && Array.isArray(dataCita.servicios)) {
+          const promises = dataCita.servicios.map(async (servicio) => {
+              await DetalleServicio.create({
+                  id_Agenda: cita.id_Agenda,
+                  id_Servicio: servicio.id_Servicio,
+              }, { transaction: t });
+          });
 
-            // Verificar y crear los detalles de servicio
-            if (dataCita.servicios && Array.isArray(dataCita.servicios)) {
-                const promises = dataCita.servicios.map(async (servicio) => {
-                    await DetalleServicio.create({
-                        id_Agenda: cita.id_Agenda,
-                        id_Servicio: servicio.id_Servicio,
-                    }, { transaction: t });
-                });
+          await Promise.all(promises);
+      }
 
-                await Promise.all(promises);
-            }
+      // Confirmar la transacción
+      await t.commit();
 
-            // Confirmar la transacción
-            await t.commit();
+      // Enviar la respuesta con la cita creada
+      res.status(201).json(cita);
+  } catch (error) {
+      // Revertir la transacción en caso de error
+      await t.rollback();
 
-            // Enviar la respuesta con la cita creada
-            res.status(201).json(cita);
-        } catch (error) {
-            // Revertir la transacción en caso de error
-            await t.rollback();
+      console.error(error);
 
-            console.error(error);
+      if (error.name === 'SequelizeForeignKeyConstraintError') {
+          return res.status(400).json({ error: 'ID de Empleado no válido. Verifique la existencia del Empleado.' });
+      }
 
-            if (error.name === 'SequelizeForeignKeyConstraintError') {
-                return res.status(400).json({ error: 'ID de Empleado no válido. Verifique la existencia del Empleado.' });
-            }
-
-            return res.status(500).json({ error: 'Error al crear la cita', message: error.message });
-        }
-    }
+      return res.status(500).json({ error: 'Error al crear la cita', message: error.message });
+  }
+}
+    
 
 
 // traer informacion para actualizar
@@ -130,6 +144,62 @@ async function listarPorIdCita(req, res){
     res.status(500).json({ message: 'Error en el servidor' });
   }
 }
+
+
+
+
+async function buscarCitaConClientePorId(req, res) {
+  try {
+    const { id_Agenda } = req.params;
+
+    // Buscar la cita por su ID
+    const cita = await Agenda.findByPk(id_Agenda);
+
+    if (!cita) {
+      return res.status(404).json({ error: 'Cita no encontrada' });
+    }
+    
+    // Obtener el documento del cliente asociado a la cita
+    const documentoCliente = cita.documento;
+
+    // Buscar el cliente por su documento
+    const cliente = await Cliente.findOne({
+      where: {
+        documento: documentoCliente,
+      },
+      attributes: ["nombre", "apellidos", "email", "telefono"],
+    });
+
+    if (!cliente) {
+      return res.status(404).json({ error: 'Cliente no encontrado' });
+    }
+
+    // Buscar los servicios asociados a la agenda
+    const servicios = await DetalleServicio.findAll({
+      where: {
+        id_Agenda: id_Agenda,
+      },
+      include: {
+        model: Servicio,
+        attributes: ["nombre", "precio"],
+      },
+    });
+
+    // Combinar la información de la cita, el cliente y los servicios
+    const citaConClienteYServicios = {
+      cita: cita,
+      cliente: cliente,
+      servicios: servicios
+    };
+
+    res.status(200).json(citaConClienteYServicios);
+  } catch (error) {
+    console.error('Error al buscar la cita, el cliente y los servicios:', error);
+    res.status(500).json({ error: 'Error al buscar la cita, el cliente y los servicios' });
+  }
+}
+
+
 
 // actualizar empleado
 async function actualizarCita(req, res) {
@@ -286,6 +356,96 @@ async function obtenerInfoClientePorDocumento(req, res) {
     res.status(500).json({ error: 'Error al obtener información del cliente' });
   }
 }
+async function listarCitas(req, res) {
+  try {
+    const agendaConCliente = await Agenda.findAll({
+      where: {
+        estado_Pago:1
+      },
+      include: [
+        {
+          model: Cliente,
+          attributes: ["nombre", "apellidos", "telefono"],
+        },
+      ],
+      attributes: [
+        "id_Agenda",
+        "fecha",
+        "hora",
+        "estado",
+        "estado_Pago"
+      ],
+    });
+
+    res.json(agendaConCliente);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Hubo un error al obtener la agenda con los clientes" });
+  }
+}
+
+
+async function listarCitasEstadoPago(req, res) {
+  try {
+    const agendaEstadoPago = await Agenda.findAll({
+      where: {
+        estado_Pago:0
+      },
+      include: [
+        {
+          model: Cliente,
+          attributes: ["nombre", "apellidos", "telefono"],
+        },
+      ],
+      attributes: [
+        "id_Agenda",
+        "fecha",
+        "hora",
+        "estado_Pago"
+      ],
+    });
+
+    res.json(agendaEstadoPago);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Hubo un error al obtener la agenda con estado finalizado" });
+  }
+}
+
+
+async function desactivarEstadoPago(req, res) {
+  try {
+      const { id_Agenda } = req.params;
+      const cita = await Agenda.findByPk(id_Agenda);
+      if (!cita) {
+          return res.status(404).json({ error: 'Cita no encontrada' });
+      }
+      // Actualiza el estado de la cita a "deshabilitado" (false)
+      await cita.update({ estado_Pago: false });
+
+      res.status(200).json({ message: 'Cita deshabilitada exitosamente' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al deshabilitar la cita' });
+  }
+}
+
+async function activarEstadoPago(req, res) {
+  try {
+      const { id_Agenda } = req.params;
+      const cita = await Agenda.findByPk(id_Agenda);
+      if (!cita) {
+          return res.status(404).json({ error: 'Cita no encontrada' });
+      }
+      await cita.update({ estado_Pago: true });
+
+      res.status(200).json({ message: 'Cita habilitada exitosamente' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al habilitar la cita' });
+  }
+}
+
 
 module.exports = {
   listarCitas,
@@ -295,5 +455,9 @@ module.exports = {
   desactivarCita,
   activarCita,
   obtenerHorasDisponibles,
-  obtenerInfoClientePorDocumento
+  obtenerInfoClientePorDocumento,
+  buscarCitaConClientePorId,
+  listarCitasEstadoPago,
+  desactivarEstadoPago,
+  activarEstadoPago
 };
